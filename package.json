@@ -1,0 +1,17 @@
+{
+  "name": "video-and-carousels",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Spec-driven editorial carousels and short-form video.",
+  "scripts": {
+    "carousel": "node src/carousel.mjs",
+    "video": "node src/video.mjs",
+    "build:examples": "node src/carousel.mjs projects/example-carousel && node src/video.mjs projects/example-video"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.0.0",
+    "@fontsource/playfair-display": "^5.0.0",
+    "playwright": "1.56.1"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "editorial",
+  "fonts": {
+    "display": "Playfair Display",
+    "body": "Inter"
+  },
+  "tones": {
+    "paper": { "bg": "#F3EEE6", "fg": "#1B1A17", "muted": "#7A736A", "accent": "#B5472B", "rule": "#1B1A17" },
+    "ink":   { "bg": "#14130F", "fg": "#F3EEE6", "muted": "#948C80", "accent": "#E2A06B", "rule": "#F3EEE6" },
+    "clay":  { "bg": "#B5472B", "fg": "#F6EFE4", "muted": "#E8C3B4", "accent": "#14130F", "rule": "#F6EFE4" },
+    "sage":  { "bg": "#CBD2BE", "fg": "#1E241A", "muted": "#59624F", "accent": "#7A2E1D", "rule": "#1E241A" }
+  },
+  "grain": 0.07
+}

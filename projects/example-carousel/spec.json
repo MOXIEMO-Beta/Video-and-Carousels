@@ -1,0 +1,13 @@
+{
+  "handle": "@moxiemo",
+  "label": "Brand Notes",
+  "format": "carousel",
+  "slides": [
+    { "layout": "cover", "kicker": "The Brand Edit", "title": "Stop posting. Start *publishing.*", "subtitle": "Five editorial moves that make a feed feel like a magazine." },
+    { "layout": "statement", "kicker": "Principle 01", "title": "Pick one *voice*, then defend it.", "body": "Trends rotate. A point of view compounds. Choose the **tone** you can hold for a year." },
+    { "layout": "list", "tone": "ink", "kicker": "The kit", "title": "Build the *system*", "items": ["One serif for the headline", "One sans for everything else", "A single accent colour", "Grain, never gradients"] },
+    { "layout": "quote", "tone": "sage", "quote": "Restraint is the most *expensive*-looking thing you can add.", "author": "Studio note" },
+    { "layout": "stat", "tone": "clay", "kicker": "Why it works", "stat": "3×", "label": "more saves on slides with one clear idea", "body": "Illustrative figure. Swap in your own data." },
+    { "layout": "cta", "tone": "paper", "title": "Make it *yours.*", "body": "Save this for your next content sprint.", "button": "Save", "button2": "Share" }
+  ]
+}
