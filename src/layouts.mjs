@@ -1,4 +1,5 @@
 import { fontCss, md, resolveAsset } from './core.mjs';
+import { PHOTO_LAYOUTS, renderPhotoHtml } from './photo.mjs';
 
 const LAYOUTS = ['cover', 'statement', 'list', 'quote', 'stat', 'image', 'cta'];
 
@@ -56,7 +57,7 @@ ${mode === 'video' ? videoCss() : ''}
 `;
 }
 
-function videoCss() {
+export function videoCss() {
   return `
 .r{opacity:0;animation:rise .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(.15s + var(--i,0) * .16s)}
 @keyframes rise{from{opacity:0;transform:translateY(44px)}to{opacity:1;transform:none}}
@@ -73,7 +74,7 @@ function videoCss() {
 `;
 }
 
-const fitScript = `
+export const fitScript = `
 function fit(){
   document.querySelectorAll('[data-fit]').forEach(el=>{
     const box=el.closest('.main'); let fs=parseFloat(el.dataset.fit);
@@ -105,6 +106,7 @@ document.fonts.ready.then(()=>{fit();if(document.body.dataset.mode==='video')spl
 `;
 
 export function renderSlideHtml(slide, ctx) {
+  if (PHOTO_LAYOUTS.includes(slide.layout)) return renderPhotoHtml(slide, ctx);
   const { w, h, theme, spec, base, index, total, mode = 'still', duration = 5 } = ctx;
   const layout = slide.layout || (index === 0 ? 'cover' : index === total - 1 ? 'cta' : 'statement');
   if (!LAYOUTS.includes(layout)) throw new Error(`Unknown layout "${layout}" on slide ${index + 1}`);

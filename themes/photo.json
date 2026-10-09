@@ -1,0 +1,21 @@
+{
+  "name": "photo",
+  "fonts": {
+    "serif": "Instrument Serif",
+    "sans": "Jost",
+    "body": "Inter",
+    "heavy": "Archivo Black",
+    "hand": "Gaegu"
+  },
+  "colors": {
+    "light": "#F6F1E9",
+    "dark": "#16130F",
+    "blush": "#F8DDD5",
+    "navy": "#1F2548",
+    "paper": "#F7EDE0",
+    "peach": "#F0CFA8",
+    "barDark": "rgba(22,19,15,0.58)",
+    "barLight": "#E9DFD1"
+  },
+  "grain": 0.07
+}

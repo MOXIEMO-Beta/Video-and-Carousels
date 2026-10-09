@@ -39,9 +39,10 @@ export function resolveAssetPath(base, p) {
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-/** Inline markup: *italic accent*, **bold**, line breaks via \n. */
+/** Inline markup: *italic accent*, **bold**, ==highlight==, line breaks via \n. */
 export function md(s = '') {
   return esc(s)
+    .replace(/==(.+?)==/g, '<mark>$1</mark>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
     .replace(/\n/g, '<br>');
@@ -61,6 +62,14 @@ export function fontCss() {
     fontFace('Playfair Display', 700, 'italic', pf, 'playfair-display-latin-700-italic.woff2'),
     fontFace('Inter', 400, 'normal', 'inter', 'inter-latin-400-normal.woff2'),
     fontFace('Inter', 600, 'normal', 'inter', 'inter-latin-600-normal.woff2'),
+    fontFace('Instrument Serif', 400, 'normal', 'instrument-serif', 'instrument-serif-latin-400-normal.woff2'),
+    fontFace('Instrument Serif', 400, 'italic', 'instrument-serif', 'instrument-serif-latin-400-italic.woff2'),
+    fontFace('Archivo Black', 400, 'normal', 'archivo-black', 'archivo-black-latin-400-normal.woff2'),
+    fontFace('Gaegu', 400, 'normal', 'gaegu', 'gaegu-latin-400-normal.woff2'),
+    fontFace('Gaegu', 700, 'normal', 'gaegu', 'gaegu-latin-700-normal.woff2'),
+    fontFace('Jost', 300, 'normal', 'jost', 'jost-latin-300-normal.woff2'),
+    fontFace('Jost', 400, 'normal', 'jost', 'jost-latin-400-normal.woff2'),
+    fontFace('Jost', 500, 'normal', 'jost', 'jost-latin-500-normal.woff2'),
   ].join('\n');
 }
 

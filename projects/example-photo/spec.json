@@ -1,0 +1,15 @@
+{
+  "handle": "@moxiemo",
+  "brand": "Moxiemo Studio",
+  "format": "carousel",
+  "slides": [
+    { "layout": "hero", "image": "photos/placeholder-moody.jpg", "label": "Creating stories", "title": "What we do\n& do well", "pos": 0.55 },
+    { "layout": "feature", "image": "photos/placeholder-sunlit.jpg", "text": "Targeted campaigns designed to turn attention into action and clicks into customers.", "items": [
+      { "n": "01", "title": "Meta ads", "text": "Reach the right audience, generate quality leads and achieve measurable results." } ] },
+    { "layout": "feature", "image": "photos/placeholder-boucle.jpg", "ink": "light", "items": [
+      { "n": "02", "title": "Design", "text": "Thoughtful visuals that make your brand feel polished, cohesive and unforgettable." },
+      { "n": "03", "title": "Websites", "text": "Beautiful, user-friendly websites designed to turn visitors into customers." } ] },
+    { "layout": "headline", "image": "photos/placeholder-bright.jpg", "kicker": "Systems / AI / Better reels", "title": "Want both\n*workflows?*\n{{Comment}}\n==VIDEO==", "body": "I’ll send you the edit workflow + the full setup.", "aside": "See you\ninside", "tag": "Create a life you love" },
+    { "layout": "note", "image": "photos/placeholder-casual.jpg", "script": "Your reels", "title": "Don't\nneed\nmore\nediting", "tag": "hot take", "card": "they need decisions most people never make. here are all 3, and how i fix them." }
+  ]
+}
