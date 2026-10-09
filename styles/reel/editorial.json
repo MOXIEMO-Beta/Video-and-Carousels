@@ -68,7 +68,7 @@
   },
   "sub": {
     "font": "hand",
-    "size": 42,
+    "size": 48,
     "y": 27,
     "color": "#FFFFFF"
   },
@@ -103,13 +103,13 @@
     "color": "#FFFFFF",
     "lead": {
       "font": "hand",
-      "size": 38,
+      "size": 42,
       "case": "none",
       "color": "#FFFFFF"
     },
     "after": {
       "font": "hand",
-      "size": 36,
+      "size": 42,
       "color": "#FFFFFF"
     }
   },
@@ -117,5 +117,14 @@
     "y": 64,
     "w": 54,
     "radius": 9
+  },
+  "count": {
+    "font": "serif",
+    "weight": 400,
+    "size": 96,
+    "tracking": -0.01,
+    "color": "#FFFFFF",
+    "shadow": 0.25,
+    "glow": 10
   }
 }

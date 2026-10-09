@@ -94,9 +94,12 @@ export async function renderReel({ spec, base, tokens, name, outFile, preview = 
     markEmphasis(words, spec.captions);
     const cl = (x) => Math.min(edl.outDur, Math.max(0, x));
     words = words
-      .filter((w) => w.t1 > edl.a && w.t0 < edl.b)
-      .map((w) => ({ ...w, t0: cl(edl.mapStart(w.t0)), t1: cl(edl.mapStart(w.t1)) }))
-      .filter((w) => w.t1 - w.t0 > 0.02); // words that lie wholly inside a cut vanish
+      .filter((w) => w.t1 > edl.a - 0.02 && w.t0 < edl.b)
+      .map((w) => ({ ...w, od: w.t1 - w.t0, t0: cl(edl.mapStart(w.t0)), t1: cl(edl.mapStart(w.t1)) }))
+      // a word vanishes only if it had real length and now has none, i.e. it lay wholly inside a cut;
+      // zero-length / inverted source words are kept (the runtime gives them a one-frame slot)
+      .filter((w) => w.t1 - w.t0 > 0.02 || w.od <= 0.02)
+      .map(({ od, ...w }) => w);
   }
   const capTokens = { ...tokens.captions, ...(spec.captions?.style || {}) };
   const useTokens = { ...tokens, captions: capTokens };

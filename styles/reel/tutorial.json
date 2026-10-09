@@ -29,12 +29,12 @@
     "case": "sentence",
     "font": "sans",
     "size": 42,
-    "weight": 500,
+    "weight": 600,
     "x": 50,
     "y": 58,
     "w": 80,
     "align": "center",
-    "shadow": 0.4,
+    "shadow": 0.6,
     "emphasis": {
       "color": "#FFFFFF",
       "font": "sans",
@@ -99,19 +99,19 @@
   "cta": {
     "font": "hand",
     "weight": 400,
-    "size": 46,
+    "size": 52,
     "case": "none",
     "tracking": 0,
     "color": "#C9B8F5",
     "lead": {
       "font": "hand",
-      "size": 38,
+      "size": 42,
       "case": "none",
       "color": "#FFFFFF"
     },
     "after": {
       "font": "hand",
-      "size": 32,
+      "size": 36,
       "color": "#FFFFFF"
     }
   },

@@ -77,6 +77,10 @@ All times are source time. Cuts and zooms are applied to the footage; every over
 | `count` | Number counting up | `from`, `to`, `prefix`, `suffix` |
 | `clip` | Second video (screen recording, b-roll) composited on top | `src`, `x`, `y`, `w`, `start`, `dur` |
 
+## Style tokens (`styles/reel/<id>.json`)
+
+Besides fonts and colours: `captions` (`mode` word/phrase/stack, `x`/`y`/`w`, `emphasis` and optional `emphasis2` used for about one emphasised word in four, `busy` = an alternative lane or white chip used while a title or card occupies the caption lane, `hideDuring` = item types that already carry the words), `title` / `section` (size, width, entrance, highlight boxes), `sub`, `cta` (keyword font, size, case, colour, plus `lead` and `after` lines), `count`, `card` (default placement for proof cards), `zoom` (`pulse` or `push`) and `zones` (the layout contract).
+
 ## Standards check
 
 `reel:create` warns about: missing captions, landscape or low-resolution footage, a missing `cta.keyword`, an intro too long for the hook sub-line, points not found in the transcript (spaced evenly instead), footage too short for the number of points, and stretches longer than 12 s with only captions on screen. It also trims pauses over 0.6 s, keeps overlay spacing correct after the cuts, and drops a hook tail that the intro repeats.

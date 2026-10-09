@@ -112,6 +112,14 @@ const wrap = (text, max) => {
   }
   return out.map((l) => l.join(' ')).filter(Boolean);
 };
+// split into the same number of lines as wrap() but with balanced lengths (no one-word orphans)
+const wrapBal = (text, max) => {
+  const base = wrap(text, max);
+  if (base.length < 2) return base;
+  const total = base.join(' ').length;
+  for (let lim = Math.ceil(total / base.length); lim <= max; lim++) { const w = wrap(text, lim); if (w.length <= base.length) return w; }
+  return base;
+};
 const cap1 = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const sig = (t) => String(t).toLowerCase().replace(/[^a-z0-9 ]/g, '').split(/\s+/).filter((w) => w.length > 2);
 const normW = words.map((w) => w.w.toLowerCase().replace(/[^a-z0-9]/g, ''));
@@ -146,30 +154,36 @@ const STYLE = {
   beatcards: { hook: 4.2, hold: (p) => (p.proof ? 4.8 : 1.8) },
 };
 let unmatched = 0;
+const dropped = {};
 function schedule(style) {
-  const { hook: hookDur, hold } = STYLE[style];
+  const cfg = STYLE[style];
+  const ctaDur = Math.min(CTA_DUR, outDur * 0.3);
+  const hookDur = Math.min(cfg.hook, outDur * 0.35);
   const startOut = hookDur + 0.4;
+  // how many points fit between the hook and the call to action
+  const usable = outDur - ctaDur - 0.3 - startOut;
+  let n = 0, acc = 0;
+  for (const p of points) { const h = cfg.hold(p); if (acc + h > usable + 0.01) break; acc += h; n++; }
+  if (n < points.length) dropped[style] = points.length - n;
   let cursorOut = startOut;
   const times = [];
-  points.forEach((p, i) => {
-    const pinned = p.at != null;
+  points.slice(0, n).forEach((p, i) => {
     let at;
-    if (pinned) at = Math.min(Math.max(0, Number(p.at)), endSrc - 1);
+    if (p.at != null) at = Math.min(Math.max(0, Number(p.at)), endSrc - 1);
     else {
       at = findInTranscript(p.title, invMap(cursorOut)) ?? null;
       if (at == null && i === 0) at = findInTranscript(p.title, 0);
       if (at == null) {
         unmatched += style === 'editorial' ? 1 : 0;
-        at = invMap(startOut + ((outDur - CTA_DUR - startOut - 1) * i) / points.length);
+        at = invMap(startOut + ((outDur - ctaDur - startOut - 1) * i) / Math.max(1, n));
       }
       if (edl.mapStart(at) < cursorOut) at = invMap(cursorOut); // never overlap the previous point
     }
     times.push(at);
-    cursorOut = Math.max(cursorOut, edl.mapStart(at) + hold(p));
+    cursorOut = Math.max(cursorOut, edl.mapStart(at) + cfg.hold(p));
   });
-  const ctaAt = Math.min(invMap(Math.max(cursorOut, outDur - CTA_DUR - 0.5)), Math.max(0, endSrc - CTA_DUR - 0.3));
-  const needed = startOut + points.reduce((s, p) => s + hold(p), 0) + CTA_DUR;
-  return { times, ctaAt, hookDur, needed };
+  const ctaAt = Math.min(invMap(Math.max(cursorOut, outDur - ctaDur - 0.5)), Math.max(0, endSrc - ctaDur - 0.3));
+  return { times, ctaAt, ctaDur, hookDur, n };
 }
 const common = (extra = {}) => ({
   footage: { src: video, cuts, zooms: 'auto' },
@@ -197,25 +211,25 @@ function numberCallouts(avoid) {
 const windows = (tl) => tl.filter((i) => !['count'].includes(i.type)).map((i) => [edl.mapStart(i.at), edl.mapStart(i.at) + (i.dur ?? 3)]);
 
 // ---------- per-style recipes ----------
-const CARD = { editorial: { y: 64, w: 54, radius: 9 }, kinetic: { y: 60, w: 72, radius: 8 }, tutorial: { y: 64, w: 78, radius: 3 }, beatcards: { y: 22, w: 66, radius: 4, size: 30, hsize: 36 } };
+const CARD = { editorial: { y: 64, w: 54, radius: 9 }, kinetic: { y: 60, w: 72, radius: 8 }, tutorial: { y: 64, w: 78, radius: 3 }, beatcards: { y: 22, w: 66, radius: 4, size: 34, hsize: 38 } };
 const card = (style, p, at, dur) => (p.proof ? [{ type: 'card', at: at + 0.4, dur, ...CARD[style], heading: p.proof.heading || p.title, rows: p.proof.rows, text: p.proof.text, stat: p.proof.stat, image: p.proof.image }] : []);
 const hookProof = (style, hookDur) => (content.proof ? [{ type: 'card', at: 1.2, dur: Math.max(3, hookDur - 1), ...CARD[style], heading: content.proof.heading, rows: content.proof.rows, text: content.proof.text, stat: content.proof.stat, image: content.proof.image }] : []);
-const ctaItem = (s) => (cta.keyword ? [{ type: 'cta', at: s.ctaAt, dur: CTA_DUR, lead: cta.lead || 'Comment', keyword: String(cta.keyword), after: cta.after, y: style_y(s) }] : []);
+const ctaItem = (s) => (cta.keyword ? [{ type: 'cta', at: s.ctaAt, dur: s.ctaDur, lead: cta.lead || 'Comment', keyword: String(cta.keyword), after: cta.after, y: style_y(s) }] : []);
 const style_y = () => 13;
 const secSub = (p) => (p.text ? wrap(String(p.text).split(/[.!?]/)[0], 40)[0] : undefined);
 
 const builders = {
   editorial() {
     const s = schedule('editorial');
-    const tl = [{ type: 'title', at: 0, dur: s.hookDur, lines: wrap(hook, 22), sub: subOf(36) }, ...hookProof('editorial', s.hookDur)];
-    points.forEach((p, i) => { tl.push({ type: 'section', at: s.times[i], dur: 4, lines: wrap(`${i + 1}. ${cap1(p.title)}`, 24), sub: secSub(p), subAt: 0.9 }); tl.push(...card('editorial', p, s.times[i], 4)); });
+    const tl = [{ type: 'title', at: 0, dur: s.hookDur, lines: wrapBal(hook, 24), sub: subOf(36) }, ...hookProof('editorial', s.hookDur)];
+    points.slice(0, s.n).forEach((p, i) => { tl.push({ type: 'section', at: s.times[i], dur: 4, lines: wrapBal(`${i + 1}. ${cap1(p.title)}`, 24), sub: secSub(p), subAt: 0.9 }); tl.push(...card('editorial', p, s.times[i], 4)); });
     tl.push(...numberCallouts(windows(tl)), ...ctaItem(s));
     return { spec: { style: 'editorial', ...common({ auto: true }), timeline: tl }, s };
   },
   kinetic() {
     const s = schedule('kinetic');
-    const tl = [{ type: 'title', at: 0, dur: s.hookDur, lines: wrap(hook, 22), sub: subOf(34) }, ...hookProof('kinetic', s.hookDur)];
-    points.forEach((p, i) => {
+    const tl = [{ type: 'title', at: 0, dur: s.hookDur, lines: wrapBal(hook, 24), sub: subOf(34) }, ...hookProof('kinetic', s.hookDur)];
+    points.slice(0, s.n).forEach((p, i) => {
       const w = wrap(p.title, 14);
       tl.push({ type: 'label', at: s.times[i], dur: 2.8, text: `step ${i + 1}.`, font: 'sans', size: 36, y: 11, x: 50, color: 'accent' });
       tl.push({ type: 'hero', at: s.times[i] + 0.15, dur: 2.65, y: 15, size: 120, lines: [{ t: w[0].toLowerCase() }, ...(w.slice(1).length ? [{ t: w.slice(1).join(' ').toLowerCase(), accent: true }] : [])] });
@@ -227,15 +241,15 @@ const builders = {
   },
   tutorial() {
     const s = schedule('tutorial');
-    const tl = [{ type: 'title', at: 0, dur: s.hookDur, lines: wrap(hook, 20), sub: subOf(34) }, ...hookProof('tutorial', s.hookDur)];
-    points.forEach((p, i) => { tl.push({ type: 'section', at: s.times[i], dur: 3.4, num: String(i + 1).padStart(2, '0') + '.', lines: wrap(p.title, 22) }); tl.push(...card('tutorial', p, s.times[i], 3.6)); });
+    const tl = [{ type: 'title', at: 0, dur: s.hookDur, lines: wrapBal(hook, 22), sub: subOf(34) }, ...hookProof('tutorial', s.hookDur)];
+    points.slice(0, s.n).forEach((p, i) => { tl.push({ type: 'section', at: s.times[i], dur: 3.4, num: String(i + 1).padStart(2, '0') + '.', lines: wrapBal(p.title, 22) }); tl.push(...card('tutorial', p, s.times[i], 3.6)); });
     tl.push(...ctaItem(s));
     return { spec: { style: 'tutorial', ...common(), timeline: tl }, s };
   },
   beatcards() {
     const s = schedule('beatcards');
-    const tl = [{ type: 'title', at: 0, dur: s.hookDur, lines: wrap(hook, 14), sub: subOf(30), subColor: 'text' }, ...hookProof('beatcards', s.hookDur)];
-    points.forEach((p, i) => {
+    const tl = [{ type: 'title', at: 0, dur: s.hookDur, lines: wrapBal(hook, 18), sub: subOf(30), subColor: 'text' }, ...hookProof('beatcards', s.hookDur)];
+    points.slice(0, s.n).forEach((p, i) => {
       const clean = String(p.title).replace(/\*/g, '').trim();
       const ws = clean.split(/\s+/);
       const colour = ['sage', 'khaki', 'sage'][i % 3];
@@ -255,13 +269,14 @@ const built = [];
 for (const style of styles) {
   if (!builders[style]) { console.warn(`Unknown style "${style}"`); continue; }
   const { spec, s } = builders[style]();
-  if (s.needed > outDur) warnings.push(`${style}: ${points.length} point(s) need about ${Math.ceil(s.needed)} s but the footage is ${Math.round(outDur)} s after trimming pauses. Titles will crowd; use fewer points or longer footage.`);
+  if (dropped[style]) warnings.push(`${style}: the footage (${Math.round(outDur)} s after trimming pauses) has room for ${s.n} of ${points.length} points; ${dropped[style]} left out. Use longer footage or fewer points.`);
   // attention gaps: stretches with only captions
   const wins = spec.timeline.filter((i) => i.type !== 'cta').map((i) => [edl.mapStart(i.at), edl.mapStart(i.at) + (i.dur ?? 3)]).sort((a, b) => a[0] - b[0]);
   let at = 0, worst = [0, 0];
   for (const [a, b] of wins) { if (a - at > worst[1] - worst[0]) worst = [at, a]; at = Math.max(at, b); }
   if (outDur - at > worst[1] - worst[0]) worst = [at, outDur];
-  if (worst[1] - worst[0] > 12) warnings.push(`${style}: ${Math.round(worst[1] - worst[0])} s with only captions on screen (${worst[0].toFixed(0)}-${worst[1].toFixed(0)} s). The references add a card, label or sticker every 4-8 s; add points with "proof" or pin "at" times.`);
+  if (worst[1] - worst[0] > 10) warnings.push(`${style}: ${Math.round(worst[1] - worst[0])} s with only captions on screen (${worst[0].toFixed(0)}-${worst[1].toFixed(0)} s). The references add a card, label or sticker every 4-8 s; add points with "proof" or pin "at" times.`);
+  if (!built.length && !spec.timeline.some((i) => ['card', 'image'].includes(i.type) && edl.mapStart(i.at) < 8)) warnings.push('No proof card or screenshot in the first 8 s. The reference reels show a number, profile or screenshot early; add a top-level "proof" to content.json.');
   const file = path.join(optDir, `${style}.json`);
   fs.writeFileSync(file, JSON.stringify(spec, null, 2));
   const r = loadReelSpec(file);

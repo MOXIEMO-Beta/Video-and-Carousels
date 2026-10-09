@@ -29,10 +29,11 @@
   const safeCol = (k) => (/^[#\w(),.%\s-]+$/.test(String(k)) ? String(k) : '#ffffff');
   const font = (k) => `font-family:'${safeFont((C.tokens.fonts && C.tokens.fonts[k]) || k)}',sans-serif;`;
   const col = (k) => safeCol((C.tokens.colors && C.tokens.colors[k]) || k);
+  // token name -> hex -> literal fallback (never an unknown colour name, which is invalid CSS)
   const colOr = (k, fb) => {
     if (k && C.tokens.colors && C.tokens.colors[k]) return C.tokens.colors[k];
     if (k && /^#[0-9a-f]{3,8}$/i.test(k)) return k;
-    return col(fb);
+    return fb;
   };
   const cased = (s, mode) => (mode === 'none' ? s : mode === 'lower' ? s.toLowerCase() : s.toUpperCase());
   const rot = (it, inner) => (it.rotate ? `<div style="transform:rotate(${num(it.rotate, 0)}deg);">${inner}</div>` : inner);
@@ -53,7 +54,7 @@
 
   // Typewriter reveal over the VISIBLE characters of the rendered markup, so *italic* markers never flash
   // and surrogate pairs stay whole. Returns [{ html, vis, total }] per line.
-  function typedMd(lines, lt, cps) {
+  function typedMd(lines, lt, cps, stable) {
     let n = Math.max(0, Math.floor(lt * cps) + 1);
     return lines.map((l) => {
       const toks = md(l).match(/<[^>]+>|&amp;|&lt;|&gt;|[\s\S]/gu) || [];
@@ -69,7 +70,12 @@
           if (t[1] === '/') stack.pop(); else stack.push(t.match(/<(\w+)/)[1]);
           continue;
         }
-        if (vis >= take) break;
+        if (vis >= take) {
+          if (!stable) break;
+          if (stable === 'caret' && !out.includes('\u0001')) out += '\u0001'; // caret goes right after the revealed text
+          out += `<span style="visibility:hidden">${t}</span>`; // keeps the layout fixed while typing
+          continue;
+        }
         out += t; vis++;
       }
       while (stack.length) out += `</${stack.pop()}>`;
@@ -98,7 +104,7 @@
     if (base.num) lines[0] = base.num + ' ' + lines[0];
     if (base.lower) lines = lines.map((l) => l.toLowerCase());
     const typing = base.entrance === 'type';
-    const parts = typing ? typedMd(lines, lt, base.cps || 40) : plain(lines);
+    const parts = typing ? typedMd(lines, lt, base.cps || 40, base.boxes ? false : 'caret') : plain(lines);
     let last = -1;
     parts.forEach((p, i) => { if (p.vis > 0) last = i; });
     const caret = typing && parts.some((p) => p.vis < p.total);
@@ -106,8 +112,9 @@
       .map((p, i) => {
         if (!p.vis) return '';
         const cur = caret && i === last ? '<span class="cur">|</span>' : '';
+        const body = p.html.includes('\u0001') ? p.html.replace('\u0001', cur) : p.html + cur;
         const style = `${font(base.font)}font-size:${P(base.size)};color:${col(base.color)};${base.boxes ? `background:${col(base.boxes)};` : ''}`;
-        return `<div class="ln"><span class="${base.boxes ? 'bx' : ''}" style="${style}">${p.html}${cur}</span></div>`;
+        return `<div class="ln"><span class="${base.boxes ? 'bx' : ''}" style="${style}">${body}</span></div>`;
       })
       .join('');
     let sub = '';
@@ -115,17 +122,17 @@
       const sk = C.tokens.sub || {};
       const subLt = lt - num(base.subAt, 0.5);
       if (subLt >= 0) {
-        const st = typedMd([String(base.sub)], subLt, 30)[0].html;
-        sub = `<div class="sub" style="${font(sk.font || 'hand')}font-size:${P(sk.size || 26)};color:${col(base.subColor || sk.color || 'text')};margin-top:${P(10)};">${st}</div>`;
+        const st = typedMd([String(base.sub)], subLt, 30, true)[0].html;
+        sub = `<div class="sub" style="${font(sk.font || 'hand')}font-size:${P(sk.size || 26)};color:${col(base.subColor || sk.color || 'text')};margin-top:${P(4)};">${st}</div>`;
       }
     }
     const fade = base.entrance === 'fade' ? ent(lt, 'fade') : '';
-    return block(base, `<div style="line-height:${base.boxes ? 1.02 : 1.08};">${html}</div>${sub}`, fade);
+    return block(base, `<div style="line-height:${base.boxes ? 1.02 : 1.0};">${html}</div>${sub}`, fade);
   };
 
   T.label = (it, lt) => {
     const txt = it.lower ? String(it.text).toLowerCase() : String(it.text);
-    const shown = it.entrance === 'type' ? typedMd([txt], lt, it.cps || 32)[0].html : md(txt);
+    const shown = it.entrance === 'type' ? typedMd([txt], lt, it.cps || 32, true)[0].html : md(txt);
     const style = `${font(it.font || 'hand')}font-size:${P(it.size || 28)};color:${col(it.color || 'text')};line-height:1.15;display:inline-block;${it.boxes ? `background:${col(it.boxes)};padding:${P(4)} ${P(10)};` : ''}`;
     const inner = `<span style="${style}">${shown}</span>`;
     const e = it.entrance && it.entrance !== 'type' ? ent(lt, it.entrance) : '';
@@ -204,9 +211,9 @@
     const w = words[i] || '';
     const isEm = Array.isArray(it.emphasis) && it.emphasis.includes(i);
     const style = isEm
-      ? `${font('serif')}font-style:italic;color:${colOr(it.emColor, 'maroon')};font-size:${P(num(it.size, 150) * 1.2)};font-weight:400;`
-      : `${font('sans')}font-weight:800;color:${colOr(it.ink, 'text')};font-size:${P(it.size || 150)};letter-spacing:-.05em;`;
-    return `<div class="beat" style="background:${colOr(it.color, 'sage')};"><div style="position:absolute;left:50%;top:${num(it.y, 50)}%;transform:translate(-50%,-50%);width:92%;text-align:center;line-height:.95;${style}text-transform:${it.lower === false ? 'none' : 'lowercase'};">${esc(w)}</div></div>`;
+      ? `${font('serif')}font-style:italic;color:${colOr(it.emColor, '#9B2B35')};font-size:${P(num(it.size, 150) * 1.2)};font-weight:400;`
+      : `${font('sans')}font-weight:800;color:${colOr(it.ink, '#FFFFFF')};font-size:${P(it.size || 150)};letter-spacing:-.05em;`;
+    return `<div class="beat" style="background:${colOr(it.color, '#C5C87B')};"><div style="position:absolute;left:50%;top:${num(it.y, 50)}%;transform:translate(-50%,-50%);width:92%;text-align:center;line-height:.95;${style}text-transform:${it.lower === false ? 'none' : 'lowercase'};">${esc(w)}</div></div>`;
   };
 
   T.checklist = (it, lt) => {
@@ -223,14 +230,15 @@
     return block({ align: 'left', x: 14, y: 14, ...it }, `<div style="text-shadow:0 1px 8px rgba(0,0,0,.4);">${rows}</div>`);
   };
 
-  T.count = (it, lt) => {
+  T.count = (it0, lt) => {
+    const it = Object.assign({}, C.tokens.count || {}, it0);
     const from = num(it.from, 0), to = num(it.to, 0);
     const dec = it.decimals ?? Math.max(0, ...[from, to].map((n) => (String(n).split('.')[1] || '').length));
     const ramp = Math.min(num(it.count_dur, 1.1), num(it.dur, Infinity));
     const e = 1 - Math.pow(1 - clamp(lt / ramp), 3);
     const v = from + (to - from) * e;
     const s = (it.prefix || '') + v.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }) + (it.suffix || '');
-    return block({ y: 22, ...it }, `<div style="${font(it.font || 'sans')}font-weight:800;font-size:${P(it.size || 120)};color:${col(it.color || 'text')};letter-spacing:-.04em;text-shadow:0 3px 20px rgba(0,0,0,.4);${ent(lt, 'pop', 0.12)}">${esc(s)}</div>`);
+    return block({ y: 22, ...it }, `<div style="${font(it.font || 'sans')}font-weight:${num(it.weight, 800)};font-size:${P(it.size || 120)};color:${col(it.color || 'text')};letter-spacing:${num(it.tracking, -0.04)}em;text-shadow:0 3px ${P(it.glow ?? 20)} rgba(0,0,0,${num(it.shadow, 0.4)});${ent(lt, 'pop', 0.12)}">${esc(s)}</div>`);
   };
 
   /* ---------- geometry (rough extents in % of frame, used for caption avoidance) ---------- */
@@ -301,7 +309,7 @@
     const words = C.words;
     if (!words.length) return '';
     const act = activeItems(t);
-    if (act.some((it) => it.type === 'beat')) return '';
+    if (act.some((it) => it.type === 'beat' || (cap.hideDuring || []).includes(it.type))) return '';
     // placement first: a style may move captions while a title/card/number occupies their lane
     let place = { x: cap.x, y: cap.y, w: cap.w, boxed: !!cap.boxed };
     if (cap.busy) {
