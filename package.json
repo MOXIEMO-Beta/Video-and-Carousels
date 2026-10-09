@@ -7,7 +7,8 @@
   "scripts": {
     "carousel": "node src/carousel.mjs",
     "video": "node src/video.mjs",
-    "build:examples": "node src/carousel.mjs projects/example-carousel && node src/video.mjs projects/example-video"
+    "build:examples": "node src/carousel.mjs projects/example-carousel && node src/video.mjs projects/example-video",
+    "create": "node src/create.mjs"
   },
   "dependencies": {
     "@fontsource/archivo-black": "^5.3.0",

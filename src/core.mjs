@@ -10,6 +10,31 @@ export const FORMATS = {
   story: { w: 1080, h: 1920 },      // Reels / TikTok / Shorts 9:16
 };
 
+export function loadBrand() {
+  const f = path.join(ROOT, 'brand.json');
+  return fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
+}
+
+/** Apply brand.json colours to the editorial (typographic) theme. */
+function brandEditorial(theme, brand) {
+  const c = brand.colors || {};
+  if (c.accent) {
+    theme.tones.paper.accent = c.accent;
+    theme.tones.sage.accent = c.accent;
+    theme.tones.clay.bg = c.accent;
+  }
+  if (c.light) { theme.tones.paper.bg = c.light; theme.tones.ink.fg = c.light; }
+  if (c.dark) { theme.tones.paper.fg = c.dark; theme.tones.ink.bg = c.dark; }
+  return theme;
+}
+
+/** Photo theme with brand colours merged in. */
+export function loadPhotoTheme() {
+  const t = JSON.parse(fs.readFileSync(path.join(ROOT, 'themes', 'photo.json'), 'utf8'));
+  Object.assign(t.colors, loadBrand().colors || {});
+  return t;
+}
+
 export function loadProject(dir) {
   const projectDir = path.resolve(dir);
   const specPath = fs.existsSync(path.join(projectDir, 'spec.json'))
@@ -17,8 +42,12 @@ export function loadProject(dir) {
     : projectDir;
   const spec = JSON.parse(fs.readFileSync(specPath, 'utf8'));
   const base = path.dirname(specPath);
-  const theme = JSON.parse(
-    fs.readFileSync(path.join(ROOT, 'themes', `${spec.theme || 'editorial'}.json`), 'utf8'),
+  const brand = loadBrand();
+  spec.handle ??= brand.handle;
+  spec.brand ??= brand.name;
+  const theme = brandEditorial(
+    JSON.parse(fs.readFileSync(path.join(ROOT, 'themes', `${spec.theme || 'editorial'}.json`), 'utf8')),
+    brand,
   );
   return { spec, theme, base, name: path.basename(base) };
 }

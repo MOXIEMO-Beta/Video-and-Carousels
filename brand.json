@@ -1,0 +1,13 @@
+{
+  "name": "Your Studio",
+  "handle": "@yourhandle",
+  "tagline": "Create a life you love",
+  "colors": {
+    "accent": "#B5472B",
+    "light": "#F6F1E9",
+    "dark": "#16130F",
+    "blush": "#F8DDD5",
+    "paper": "#F7EDE0",
+    "navy": "#1F2548"
+  }
+}

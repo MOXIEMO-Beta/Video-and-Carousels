@@ -78,9 +78,11 @@ export const fitScript = `
 function fit(){
   document.querySelectorAll('[data-fit]').forEach(el=>{
     const box=el.closest('.main'); let fs=parseFloat(el.dataset.fit);
+    const start=fs;
     el.style.setProperty('--fs',fs+'px');
     let guard=0;
-    while(guard++<200 && box.scrollHeight>box.clientHeight+1 && fs>40){fs-=4;el.style.setProperty('--fs',fs+'px');}
+    while(guard++<200 && (box.scrollHeight>box.clientHeight+1 || (!el.classList.contains('hl') && el.scrollWidth>el.clientWidth+1)) && fs>40){fs-=4;el.style.setProperty('--fs',fs+'px');}
+    window.__fitMin=Math.min(window.__fitMin||1,fs/start);
   });
 }
 function splitWords(){

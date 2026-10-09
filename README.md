@@ -1,5 +1,36 @@
 # Video & Carousels
 
+An editorial carousel and short-form video kit. Add your photos and your words; get several finished, on-brand options to choose from.
+
+## Quick start (3 steps)
+
+```bash
+npm install
+```
+
+1. **Brand:** edit `brand.json` (name, handle, tagline, accent colour).
+2. **Inputs:** drop photos into `inbox/` and copy `content.example.json` to `content.json`, then write your hook, points and call to action.
+3. **Create:**
+
+```bash
+npm run create -- --name my-post
+```
+
+You get four options (Cinematic, Luxe headline, Playful note, Typographic) rendered to `output/my-post/options/`, a side-by-side page at `output/my-post/options/index.html`, and a **Standards check** that flags low-res photos, overlong copy and text that had to shrink.
+
+Pick one, which also renders the final PNGs + PDF (add `--video` for a 9:16 reel):
+
+```bash
+npm run create -- --name my-post --pick luxe --video
+```
+
+Reshuffle which photo lands on which slide with `--seed 2`. No photos yet? Add `--placeholders`. Fine-tune afterwards by editing `projects/my-post/spec.json`.
+
+The rules behind the options are in [`docs/STYLE-GUIDE.md`](docs/STYLE-GUIDE.md). `CLAUDE.md` makes Claude Code follow the same workflow when you ask it to make a post.
+
+---
+
+## Under the hood
 Spec-driven editorial carousels and short-form video. Write one `spec.json`, get:
 
 - **Carousel**: `slide-01.png …` (1080×1350, 4:5) plus a single PDF for LinkedIn document posts
