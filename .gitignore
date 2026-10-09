@@ -4,3 +4,7 @@ output/
 inbox/*
 !inbox/.gitkeep
 assets/footage/*.mp4
+projects/demo*/
+projects/verify-*/
+projects/*/options/
+projects/*/reel/options/
