@@ -19,6 +19,10 @@ const flag = (k) => argv.includes(k);
 const opt = (k, d) => (argv.includes(k) ? argv[argv.indexOf(k) + 1] : d);
 
 const name = opt('--name', 'my-post');
+if (!/^[A-Za-z0-9._-]+$/.test(name) || name === '.' || name === '..') {
+  console.error('--name must be a slug: letters, digits, ".", "_" or "-" (no spaces or quotes).');
+  process.exit(1);
+}
 const imagesDir = path.resolve(ROOT, opt('--images', 'inbox'));
 const contentFile = opt('--content', fs.existsSync(path.join(ROOT, 'content.json')) ? 'content.json' : 'content.example.json');
 const seed = opt('--seed') != null ? Number(opt('--seed')) : null;
@@ -83,7 +87,12 @@ if (flag('--pick')) {
   const style = opt('--pick');
   const src = path.join(optionsDir, `${style}.json`);
   if (!fs.existsSync(src)) throw new Error(`No option "${style}" for ${name}. Run create first.`);
-  fs.copyFileSync(src, path.join(projectDir, 'spec.json'));
+  const dest = path.join(projectDir, 'spec.json');
+  if (fs.existsSync(dest) && !fs.readFileSync(dest).equals(fs.readFileSync(src)) && !flag('--force')) {
+    console.error(`projects/${name}/spec.json already exists and differs from option "${style}" (hand edits?).\nRe-render it with:  npm run carousel -- projects/${name}\nor overwrite it with --force.`);
+    process.exit(1);
+  }
+  fs.copyFileSync(src, dest);
   console.log(`✓ projects/${name}/spec.json  (edit this file, then re-run carousel / video)`);
   execFileSync('node', [path.join(ROOT, 'src/carousel.mjs'), projectDir], { stdio: 'inherit' });
   if (flag('--video')) execFileSync('node', [path.join(ROOT, 'src/video.mjs'), projectDir], { stdio: 'inherit' });

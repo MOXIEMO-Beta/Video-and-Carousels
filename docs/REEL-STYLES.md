@@ -40,7 +40,7 @@ Exact tokens (fonts, colours, sizes, caption anchors, zoom cadence) are in `styl
 npm run reel:create -- --name my-reel --video inbox/clip.mp4 --captions inbox/clip-words.json
 ```
 
-This reads `content.json` (hook, intro, points, cta), trims pauses, finds each point in the transcript (or spaces them evenly; add `"at": seconds` to pin), builds one half-resolution option per style and a comparison page at `output/my-reel/reel-options/index.html`. Finalise with `--pick <style>`, which renders full quality and writes `projects/my-reel/reel/spec.json` to edit by hand (`npm run reel -- projects/my-reel/reel`).
+This reads `content.json` (hook, intro, points, cta; optional top-level `proof` shown in the first seconds, and per-point `proof` cards with `rows`, `text`, `stat` or `image`), trims pauses, finds each point in the transcript (or spaces them evenly; add `"at": seconds` to pin), builds one half-resolution option per style and a comparison page at `output/my-reel/reel-options/index.html`. Finalise with `--pick <style>`, which renders full quality and writes `projects/my-reel/reel/spec.json` to edit by hand (`npm run reel -- projects/my-reel/reel`).
 
 Captions: any of `words.json` (`[{w,t0,t1}]`), `.srt`, `.vtt`. To transcribe locally: `pip install faster-whisper && npm run transcribe -- inbox/clip.mp4` (downloads a speech model from huggingface.co on first use).
 
@@ -76,6 +76,10 @@ All times are source time. Cuts and zooms are applied to the footage; every over
 | `checklist` | Items typed in one after another | `items`, `stagger` |
 | `count` | Number counting up | `from`, `to`, `prefix`, `suffix` |
 | `clip` | Second video (screen recording, b-roll) composited on top | `src`, `x`, `y`, `w`, `start`, `dur` |
+
+## Standards check
+
+`reel:create` warns about: missing captions, landscape or low-resolution footage, a missing `cta.keyword`, an intro too long for the hook sub-line, points not found in the transcript (spaced evenly instead), footage too short for the number of points, and stretches longer than 12 s with only captions on screen. It also trims pauses over 0.6 s, keeps overlay spacing correct after the cuts, and drops a hook tail that the intro repeats.
 
 ## Not built (yet)
 

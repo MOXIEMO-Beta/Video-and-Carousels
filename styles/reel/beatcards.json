@@ -18,7 +18,7 @@
     "sage": "#C5C87B",
     "olive": "#6B6B2E",
     "maroon": "#9B2B35",
-    "khaki": "#CFC7A4",
+    "khaki": "#B5AD93",
     "lemon": "#F3F412",
     "card": "#F4F4F2",
     "cardInk": "#111111",
@@ -31,12 +31,24 @@
     "size": 50,
     "weight": 800,
     "x": 50,
-    "y": 72,
+    "y": 27,
     "w": 84,
     "align": "center",
     "shadow": 0.45,
     "tracking": -0.04,
     "emphasis": {
+      "color": "#F3F412",
+      "font": "sans",
+      "italic": false,
+      "scale": 1,
+      "weight": 800
+    },
+    "busy": {
+      "y": 63,
+      "boxed": true,
+      "w": 84
+    },
+    "emphasis2": {
       "color": "#F3F412",
       "font": "serif",
       "italic": true,
@@ -45,31 +57,35 @@
     }
   },
   "title": {
-    "font": "sans",
-    "size": 64,
-    "y": 14,
+    "font": "serif",
+    "size": 112,
+    "y": 16,
     "align": "center",
     "color": "#F3F412",
     "entrance": "none",
     "boxes": null,
     "lower": false,
-    "dur": 4.2
+    "dur": 4.2,
+    "w": 86,
+    "weight": 400
   },
   "section": {
     "font": "sans",
-    "size": 46,
+    "size": 56,
     "y": 16,
     "align": "center",
     "color": "#FFFFFF",
     "entrance": "none",
     "boxes": null,
     "lower": true,
-    "dur": 2.4
+    "dur": 2.4,
+    "w": 86
   },
   "sub": {
-    "font": "hand",
-    "size": 28,
-    "y": 27
+    "font": "sans",
+    "size": 30,
+    "y": 27,
+    "color": "#FFFFFF"
   },
   "zoom": {},
   "zones": {
@@ -82,9 +98,33 @@
       78
     ],
     "card": [
-      45,
-      85
+      14,
+      48
     ]
   },
-  "notes": "v2: heavy tight lowercase grotesque, exactly one word at a time on sage-green full-frame cards (0.17-0.45 s per word), b-roll cutaways, a bumper inset, a split-layout finale. v4: phrase captions (1-5 words) with a boxed state, lemon-yellow serif accents, khaki cutaways, shrink-and-blur layout. Needs cutaway footage (b-roll, screenshots) to look right."
+  "notes": "v2: heavy tight lowercase grotesque, exactly one word at a time on sage-green full-frame cards (0.17-0.45 s per word), b-roll cutaways, a bumper inset, a split-layout finale. v4: phrase captions (1-5 words) with a boxed state, lemon-yellow serif accents, khaki cutaways, shrink-and-blur layout. Needs cutaway footage (b-roll, screenshots) to look right.",
+  "cta": {
+    "font": "sans",
+    "weight": 800,
+    "size": 72,
+    "case": "lower",
+    "tracking": -0.04,
+    "color": "#F3F412",
+    "lead": {
+      "font": "sans",
+      "size": 46,
+      "case": "lower",
+      "color": "#FFFFFF"
+    },
+    "after": {
+      "font": "sans",
+      "size": 38,
+      "color": "#FFFFFF"
+    }
+  },
+  "card": {
+    "y": 22,
+    "w": 66,
+    "radius": 4
+  }
 }

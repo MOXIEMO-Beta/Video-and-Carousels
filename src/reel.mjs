@@ -70,7 +70,7 @@ export async function renderReel({ spec, base, tokens, name, outFile, preview = 
 
   // ---- pass A: footage with cuts + zooms
   const A = edl.a, B = edl.b;
-  const cutExpr = edl.cuts.map(([s, e]) => `between(t,${(s - A).toFixed(3)},${(e - A).toFixed(3)})`).join('+');
+  const cutExpr = edl.cuts.map(([s, e]) => `gte(t,${(s - A).toFixed(3)})*lt(t,${(e - A).toFixed(3)})`).join('+');
   const vf = [`[0:v]trim=start=${A}:end=${B},setpts=PTS-STARTPTS,fps=${FPS}`];
   if (cutExpr) vf.push(`select='not(${cutExpr})',setpts=N/FRAME_RATE/TB`);
   vf.push(`scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H}`);
@@ -92,9 +92,11 @@ export async function renderReel({ spec, base, tokens, name, outFile, preview = 
   if (spec.captions?.src) {
     words = parseCaptions(resolveAssetPath(base, spec.captions.src));
     markEmphasis(words, spec.captions);
+    const cl = (x) => Math.min(edl.outDur, Math.max(0, x));
     words = words
-      .map((w) => ({ ...w, t0: edl.mapT(w.t0), t1: edl.mapT(w.t1) }))
-      .filter((w) => w.t0 != null && w.t1 != null);
+      .filter((w) => w.t1 > edl.a && w.t0 < edl.b)
+      .map((w) => ({ ...w, t0: cl(edl.mapStart(w.t0)), t1: cl(edl.mapStart(w.t1)) }))
+      .filter((w) => w.t1 - w.t0 > 0.02); // words that lie wholly inside a cut vanish
   }
   const capTokens = { ...tokens.captions, ...(spec.captions?.style || {}) };
   const useTokens = { ...tokens, captions: capTokens };
@@ -147,9 +149,10 @@ img{max-width:100%}
   await browser.close();
   log(`• overlay: ${states.length} distinct states over ${total} frames`);
 
+  const q = (f) => `file '${f.replace(/'/g, "'\\''")}'`;
   const list = states
-    .map((s, i) => `file '${s.file}'\nduration ${((i + 1 < states.length ? states[i + 1].t : total / FPS) - s.t).toFixed(5)}`)
-    .join('\n') + `\nfile '${states[states.length - 1].file}'\n`;
+    .map((s, i) => `${q(s.file)}\nduration ${((i + 1 < states.length ? states[i + 1].t : total / FPS) - s.t).toFixed(5)}`)
+    .join('\n') + `\n${q(states[states.length - 1].file)}\n`;
   fs.writeFileSync(path.join(work, 'overlay.txt'), list);
 
   // ---- pass B: composite clips + overlay onto the footage

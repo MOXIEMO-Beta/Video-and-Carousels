@@ -43,29 +43,34 @@
   },
   "title": {
     "font": "serif",
-    "size": 64,
-    "y": 15,
+    "size": 78,
+    "y": 14,
     "align": "center",
     "color": "#FFFFFF",
     "entrance": "none",
     "boxes": null,
-    "dur": 5.5
+    "dur": 5.5,
+    "w": 86,
+    "lower": false
   },
   "section": {
     "font": "serif",
-    "size": 52,
-    "y": 15.5,
+    "size": 64,
+    "y": 15,
     "align": "center",
     "color": "#FFFFFF",
     "entrance": "type",
     "cps": 32,
     "boxes": null,
-    "dur": 4
+    "dur": 4,
+    "w": 86,
+    "lower": false
   },
   "sub": {
     "font": "hand",
-    "size": 30,
-    "y": 27
+    "size": 42,
+    "y": 27,
+    "color": "#FFFFFF"
   },
   "zoom": {
     "pulse": {
@@ -88,5 +93,29 @@
       88
     ]
   },
-  "notes": "Captions sit left of the face at a fixed anchor (v5, v8, v10: x~26-30%, y~39-40%); centred variants exist (v3 y~51%). Static top-band title held 4-6.5 s, then swapped for typed chapter headers. Chapter headers and sub-lines use thin handwriting. Punch-in pulses of ~1.16x for 1.4-2 s every 6-9 s (v3 only; others locked off)."
+  "notes": "Captions sit left of the face at a fixed anchor (v5, v8, v10: x~26-30%, y~39-40%); centred variants exist (v3 y~51%). Static top-band title held 4-6.5 s, then swapped for typed chapter headers. Chapter headers and sub-lines use thin handwriting. Punch-in pulses of ~1.16x for 1.4-2 s every 6-9 s (v3 only; others locked off).",
+  "cta": {
+    "font": "serif",
+    "weight": 400,
+    "size": 66,
+    "case": "none",
+    "tracking": -0.01,
+    "color": "#FFFFFF",
+    "lead": {
+      "font": "hand",
+      "size": 38,
+      "case": "none",
+      "color": "#FFFFFF"
+    },
+    "after": {
+      "font": "hand",
+      "size": 36,
+      "color": "#FFFFFF"
+    }
+  },
+  "card": {
+    "y": 64,
+    "w": 54,
+    "radius": 9
+  }
 }

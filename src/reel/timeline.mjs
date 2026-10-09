@@ -17,13 +17,19 @@ export function parseCaptions(file) {
     return m ? (Number(m[1] || 0) * 3600 + Number(m[2]) * 60 + Number(m[3])) : NaN;
   };
   const words = [];
-  for (const block of raw.replace(/\r/g, '').split(/\n\n+/)) {
-    const lines = block.split('\n').filter(Boolean);
+  let prevLines = [], prevEnd = -1;
+  for (const block of raw.replace(/^\uFEFF/, '').replace(/\r/g, '').split(/\n[ \t]*\n\s*/)) {
+    const lines = block.split('\n').filter((l) => l.trim());
     const li = lines.findIndex((l) => l.includes('-->'));
     if (li < 0) continue;
     const [a, b] = lines[li].split('-->');
-    const t0 = ts(a), t1 = ts(b);
-    const toks = lines.slice(li + 1).join(' ').replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean);
+    const t0 = ts(a), t1 = ts(b.trim().split(/\s+/)[0]);
+    if (!Number.isFinite(t0) || !Number.isFinite(t1) || t1 <= t0) continue;
+    let body = lines.slice(li + 1).map((l) => l.replace(/<[^>]+>/g, '').trim()).filter(Boolean);
+    // rolling captions repeat the previous cue's line(s); keep only the new text
+    const fresh = t0 <= prevEnd + 0.05 ? body.filter((l) => !prevLines.includes(l)) : body;
+    prevLines = body; prevEnd = t1;
+    const toks = fresh.join(' ').split(/\s+/).filter(Boolean);
     const total = toks.reduce((s, x) => s + x.length + 1, 0);
     let cur = t0;
     for (const w of toks) {
@@ -43,6 +49,8 @@ export function markEmphasis(words, opts = {}) {
     if (set.has(n)) w.e = true;
     if (opts.numbers && /[0-9]/.test(n) && /[$%0-9]{2,}/.test(n)) w.e = true;
   });
+  let k = 0;
+  words.forEach((w) => { if (w.e) w.v = k++ % 4 === 3 ? 1 : 0; });
   if (opts.auto) {
     // deterministic keyword picks: long words, at least 4 words apart, never function words
     const stop = new Set(['because', 'between', 'through', 'another', 'something', 'everything', 'anything', 'actually', 'probably']);
@@ -50,7 +58,7 @@ export function markEmphasis(words, opts = {}) {
     words.forEach((w) => {
       since++;
       const n = norm(w.w);
-      if (!w.e && n.length >= 7 && !stop.has(n) && since >= (opts.gap ?? 4)) { w.e = true; since = 0; }
+      if (!w.e && n.length >= 7 && !stop.has(n) && since >= (opts.gap ?? 4)) { w.e = true; w.v = k++ % 4 === 3 ? 1 : 0; since = 0; }
       else if (w.e) since = 0;
     });
   }
@@ -67,7 +75,12 @@ export function buildEdl(footage, srcDur) {
   const cuts = (footage.cuts || [])
     .map(([s, e]) => [Math.max(a, s), Math.min(b, e)])
     .filter(([s, e]) => e > s)
-    .sort((x, y) => x[0] - y[0]);
+    .sort((x, y) => x[0] - y[0])
+    .reduce((m, c) => {
+      const l = m[m.length - 1];
+      if (l && c[0] <= l[1]) l[1] = Math.max(l[1], c[1]); else m.push([c[0], c[1]]);
+      return m;
+    }, []);
   const removed = cuts.reduce((s, [x, y]) => s + (y - x), 0);
   const outDur = b - a - removed;
   const mapT = (t) => {
@@ -113,7 +126,7 @@ export function autoZooms(tokens, outDur) {
     for (let t = z.pulse.every; t < outDur - z.pulse.dur; t += z.pulse.every) out.push({ kind: 'pulse', at: t, dur: z.pulse.dur, scale: z.pulse.scale });
   }
   if (z.push) {
-    for (let t = 0; t < outDur; t += z.push.dur * 1.6) out.push({ kind: 'push', at: t, dur: Math.min(z.push.dur, outDur - t), from: z.push.from, to: z.push.to });
+    for (let t = 0; t < outDur; t += z.push.dur * 1.6) out.push({ kind: 'push', at: t, dur: z.push.dur, from: z.push.from, to: z.push.to });
   }
   return out;
 }
