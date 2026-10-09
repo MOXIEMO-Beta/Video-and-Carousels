@@ -1,0 +1,20 @@
+{
+  "style": "tutorial",
+  "footage": {
+    "src": "footage/sample.mp4",
+    "cuts": [[14.0, 14.6]],
+    "zooms": "auto"
+  },
+  "captions": { "src": "footage/sample-words.json", "numbers": true },
+  "timeline": [
+    { "type": "title", "at": 0, "dur": 8, "lines": ["how I got my first", "10K followers"], "sub": "in under 3 months" },
+    { "type": "section", "at": 8.2, "dur": 3.4, "num": "01.", "lines": ["credibility hook"] },
+    { "type": "card", "at": 11.4, "dur": 3.6, "x": 50, "y": 62, "w": 78, "heading": "Credibility hook examples:", "rows": ["I made $700k in 3 weeks from a $67 product", "How I got my first 10K followers", "What nobody tells you about launching"] },
+    { "type": "section", "at": 17.0, "dur": 3.4, "num": "02.", "lines": ["create unselfish", "content"] },
+    { "type": "box", "at": 19.4, "dur": 4, "x": 12, "y": 24, "w": 76, "lead": "Unselfish content:", "text": "content that helps the viewer. It can still be about you, but it has to also help them." },
+    { "type": "sticker", "at": 22.4, "dur": 2.5, "emoji": "👀", "x": 82, "y": 30, "size": 80, "rotate": -8 },
+    { "type": "section", "at": 25.0, "dur": 3.4, "num": "03.", "lines": ["signature series"] },
+    { "type": "checklist", "at": 27.0, "dur": 5, "x": 10, "y": 16, "items": ["same format", "same title style", "new topic each week"] },
+    { "type": "cta", "at": 31.5, "dur": 4, "lead": "Comment", "keyword": "LAUNCH", "y": 14, "after": "and I'll send you the workflow" }
+  ]
+}

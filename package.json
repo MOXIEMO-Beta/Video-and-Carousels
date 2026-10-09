@@ -8,7 +8,10 @@
     "carousel": "node src/carousel.mjs",
     "video": "node src/video.mjs",
     "build:examples": "node src/carousel.mjs projects/example-carousel && node src/video.mjs projects/example-video",
-    "create": "node src/create.mjs"
+    "create": "node src/create.mjs",
+    "reel": "node src/reel.mjs",
+    "reel:create": "node src/reel-create.mjs",
+    "transcribe": "python3 scripts/transcribe.py"
   },
   "dependencies": {
     "@fontsource/anton": "^5.3.0",

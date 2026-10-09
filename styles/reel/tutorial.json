@@ -1,0 +1,16 @@
+{
+  "id": "tutorial",
+  "name": "How-to: typewriter titles + numbered steps",
+  "best_for": "'How I do X' tutorials and numbered tip lists (64-82 s): walkthroughs, screen-recording demos, growth tips.",
+  "members": ["v1", "v7", "v12"],
+  "fonts": { "serif": "Instrument Serif", "sans": "Inter", "body": "Inter", "hand": "Gaegu", "display": "Instrument Serif" },
+  "colors": { "text": "#FFFFFF", "ink": "#0A0A0A", "yellow": "#F8F498", "pink": "#F8D8EE", "lavender": "#C9B8F5", "card": "#F8F8F8", "cardInk": "#222222", "accent": "#C9B8F5" },
+  "captions": { "mode": "word", "case": "sentence", "font": "sans", "size": 42, "weight": 500, "x": 50, "y": 58, "w": 80, "align": "center", "shadow": 0.4,
+    "emphasis": { "color": "#FFFFFF", "font": "sans", "italic": false, "scale": 1 } },
+  "title": { "font": "serif", "size": 54, "y": 13, "align": "center", "color": "#0A0A0A", "entrance": "type", "cps": 40, "boxes": "#F8F498", "lower": true, "dur": 12 },
+  "section": { "font": "serif", "size": 54, "y": 15.8, "align": "center", "color": "#0A0A0A", "entrance": "type", "cps": 40, "boxes": "#F8D8EE", "lower": true, "dur": 3.4 },
+  "sub": { "font": "hand", "size": 30, "y": 28 },
+  "zoom": { "push": { "from": 1.0, "to": 1.2, "dur": 8 } },
+  "zones": { "title": [13, 28], "caption": [54, 62], "card": [60, 88] },
+  "notes": "Typewriter at ~40 chars/s on per-line sharp-cornered highlight boxes: pale yellow for the hook, pale pink for numbered section titles ('01. credibility hook'). Handwritten sub-lines. Proof devices: white document cards, label boxes, staggered label pairs, phone/editor inset. Captions in a fixed centred lane y~55-60%; they sit over cards, so the engine flips them to dark on light cards. v12 uses a slow 100->120% push-in."
+}

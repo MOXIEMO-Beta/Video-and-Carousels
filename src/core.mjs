@@ -102,6 +102,7 @@ export function fontCss() {
     fontFace('Inter Tight', 800, 'normal', 'inter-tight', 'inter-tight-latin-800-normal.woff2'),
     fontFace('Yellowtail', 400, 'normal', 'yellowtail', 'yellowtail-latin-400-normal.woff2'),
     fontFace('Anton', 400, 'normal', 'anton', 'anton-latin-400-normal.woff2'),
+    fontFace('Gaegu', 300, 'normal', 'gaegu', 'gaegu-latin-300-normal.woff2'),
     fontFace('Jost', 300, 'normal', 'jost', 'jost-latin-300-normal.woff2'),
     fontFace('Jost', 400, 'normal', 'jost', 'jost-latin-400-normal.woff2'),
     fontFace('Jost', 500, 'normal', 'jost', 'jost-latin-500-normal.woff2'),

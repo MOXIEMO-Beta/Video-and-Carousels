@@ -1,0 +1,90 @@
+{
+  "id": "beatcards",
+  "name": "Fast cutaway montage + beat cards",
+  "best_for": "Short punchy listicles or tips (50-55 s) where something changes every second. Low confidence: built from two reels that share only generic traits.",
+  "members": [
+    "v2",
+    "v4"
+  ],
+  "fonts": {
+    "serif": "Instrument Serif",
+    "sans": "Inter Tight",
+    "body": "Inter",
+    "hand": "Gaegu",
+    "display": "Inter Tight"
+  },
+  "colors": {
+    "text": "#FFFFFF",
+    "sage": "#C5C87B",
+    "olive": "#6B6B2E",
+    "maroon": "#9B2B35",
+    "khaki": "#CFC7A4",
+    "lemon": "#F3F412",
+    "card": "#F4F4F2",
+    "cardInk": "#111111",
+    "accent": "#F3F412"
+  },
+  "captions": {
+    "mode": "phrase",
+    "case": "lower",
+    "font": "sans",
+    "size": 50,
+    "weight": 800,
+    "x": 50,
+    "y": 72,
+    "w": 84,
+    "align": "center",
+    "shadow": 0.45,
+    "tracking": -0.04,
+    "emphasis": {
+      "color": "#F3F412",
+      "font": "serif",
+      "italic": true,
+      "scale": 1.3,
+      "weight": 400
+    }
+  },
+  "title": {
+    "font": "sans",
+    "size": 64,
+    "y": 14,
+    "align": "center",
+    "color": "#F3F412",
+    "entrance": "none",
+    "boxes": null,
+    "lower": false,
+    "dur": 4.2
+  },
+  "section": {
+    "font": "sans",
+    "size": 46,
+    "y": 16,
+    "align": "center",
+    "color": "#FFFFFF",
+    "entrance": "none",
+    "boxes": null,
+    "lower": true,
+    "dur": 2.4
+  },
+  "sub": {
+    "font": "hand",
+    "size": 28,
+    "y": 27
+  },
+  "zoom": {},
+  "zones": {
+    "title": [
+      11,
+      30
+    ],
+    "caption": [
+      60,
+      78
+    ],
+    "card": [
+      45,
+      85
+    ]
+  },
+  "notes": "v2: heavy tight lowercase grotesque, exactly one word at a time on sage-green full-frame cards (0.17-0.45 s per word), b-roll cutaways, a bumper inset, a split-layout finale. v4: phrase captions (1-5 words) with a boxed state, lemon-yellow serif accents, khaki cutaways, shrink-and-blur layout. Needs cutaway footage (b-roll, screenshots) to look right."
+}

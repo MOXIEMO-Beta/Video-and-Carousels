@@ -3,3 +3,4 @@ output/
 .DS_Store
 inbox/*
 !inbox/.gitkeep
+assets/footage/*.mp4

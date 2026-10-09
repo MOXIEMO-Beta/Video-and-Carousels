@@ -1,0 +1,92 @@
+{
+  "id": "editorial",
+  "name": "Editorial serif + proof cards",
+  "best_for": "Results stories, launch breakdowns, myth-busting, case studies. Long (95-175 s) talking-head reels that need credibility proof and chaptered sections.",
+  "members": [
+    "v3",
+    "v5",
+    "v8",
+    "v10"
+  ],
+  "fonts": {
+    "serif": "Instrument Serif",
+    "sans": "Jost",
+    "body": "Inter",
+    "hand": "Gaegu",
+    "display": "Instrument Serif"
+  },
+  "colors": {
+    "text": "#FFFFFF",
+    "cream": "#F6F1E7",
+    "tint": "#F3E8B8",
+    "card": "#FFFFFF",
+    "cardInk": "#111111",
+    "accent": "#F3E8B8"
+  },
+  "captions": {
+    "mode": "word",
+    "case": "sentence",
+    "font": "serif",
+    "size": 42,
+    "weight": 400,
+    "x": 28,
+    "y": 40,
+    "w": 46,
+    "align": "center",
+    "shadow": 0.45,
+    "emphasis": {
+      "color": "#F3E8B8",
+      "font": "serif",
+      "italic": false,
+      "scale": 1
+    }
+  },
+  "title": {
+    "font": "serif",
+    "size": 64,
+    "y": 15,
+    "align": "center",
+    "color": "#FFFFFF",
+    "entrance": "none",
+    "boxes": null,
+    "dur": 5.5
+  },
+  "section": {
+    "font": "serif",
+    "size": 52,
+    "y": 15.5,
+    "align": "center",
+    "color": "#FFFFFF",
+    "entrance": "type",
+    "cps": 32,
+    "boxes": null,
+    "dur": 4
+  },
+  "sub": {
+    "font": "hand",
+    "size": 30,
+    "y": 27
+  },
+  "zoom": {
+    "pulse": {
+      "scale": 1.16,
+      "dur": 1.7,
+      "every": 7
+    }
+  },
+  "zones": {
+    "title": [
+      11,
+      28
+    ],
+    "caption": [
+      38,
+      58
+    ],
+    "card": [
+      55,
+      88
+    ]
+  },
+  "notes": "Captions sit left of the face at a fixed anchor (v5, v8, v10: x~26-30%, y~39-40%); centred variants exist (v3 y~51%). Static top-band title held 4-6.5 s, then swapped for typed chapter headers. Chapter headers and sub-lines use thin handwriting. Punch-in pulses of ~1.16x for 1.4-2 s every 6-9 s (v3 only; others locked off)."
+}

@@ -87,6 +87,17 @@ Built from reference carousels: full-bleed photography with type laid over it. E
 
 `spec.brand` sets the bottom label. Run `node src/make-placeholders.mjs` to regenerate the stand-in backgrounds; replace them with your own photos.
 
+## Reels (your footage)
+
+Four reel styles distilled from 12 reference reels: Editorial serif, Kinetic gold italic, How-to typewriter and Beat cards. Give it a vertical clip and a word-timed captions file and it builds one half-resolution option per style:
+
+```bash
+npm run reel:create -- --name my-reel --video inbox/clip.mp4 --captions inbox/clip-words.json
+npm run reel:create -- --name my-reel --pick tutorial        # full quality
+```
+
+No footage yet? `--sample` uses a stand-in clip (`node src/make-sample-footage.mjs` makes it). Details, the spec reference and what is not built yet are in [`docs/REEL-STYLES.md`](docs/REEL-STYLES.md).
+
 ## Styles from your Canva designs
 
 Exact colours, sizes and spacing were read from the owner's Canva files (`themes/pop.json`). Fonts are open-source stand-ins, because Canva returns font IDs rather than names.

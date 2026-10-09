@@ -3,9 +3,32 @@
   "hook": "Stop posting. Start *publishing.*",
   "intro": "Five editorial moves that make a feed feel like a magazine.",
   "points": [
-    { "title": "Pick one voice", "text": "Trends rotate. A point of view compounds. Choose the tone you can hold for a year." },
-    { "title": "Build the system", "text": "One serif, one sans, one accent colour. Repeat until it is recognisable." },
-    { "title": "Let photos lead", "text": "Real light and real texture do more than any template." }
+    {
+      "title": "Pick one voice",
+      "text": "Trends rotate. A point of view compounds. Choose the tone you can hold for a year.",
+      "proof": {
+        "heading": "Examples that work:",
+        "rows": [
+          "I made $700k in 3 weeks from a $67 product",
+          "How I got my first 10K followers"
+        ]
+      }
+    },
+    {
+      "title": "Build the system",
+      "text": "One serif, one sans, one accent colour. Repeat until it is recognisable."
+    },
+    {
+      "title": "Let photos lead",
+      "text": "Real light and real texture do more than any template."
+    }
   ],
-  "cta": { "title": "Make it *yours.*", "body": "Save this for your next content sprint.", "button": "Save", "highlight": "yours" }
+  "cta": {
+    "title": "Make it *yours.*",
+    "body": "Save this for your next content sprint.",
+    "button": "Save",
+    "highlight": "yours",
+    "keyword": "LAUNCH",
+    "after": "and I'll send you the workflow"
+  }
 }

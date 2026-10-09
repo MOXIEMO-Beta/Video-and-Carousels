@@ -1,0 +1,102 @@
+{
+  "style": "kinetic",
+  "footage": {
+    "src": "assets/footage/sample.mp4",
+    "cuts": [],
+    "zooms": "auto"
+  },
+  "captions": {
+    "src": "assets/footage/sample-words.json",
+    "numbers": true,
+    "auto": true
+  },
+  "timeline": [
+    {
+      "type": "title",
+      "at": 0,
+      "dur": 3.6,
+      "lines": [
+        "Stop posting.",
+        "Start publishing."
+      ],
+      "sub": "Five editorial moves that make a"
+    },
+    {
+      "type": "label",
+      "at": 4.82,
+      "dur": 2.8,
+      "text": "step 1.",
+      "font": "sans",
+      "size": 36,
+      "y": 12,
+      "x": 50,
+      "color": "accent"
+    },
+    {
+      "type": "hero",
+      "at": 4.970000000000001,
+      "dur": 2.65,
+      "y": 17,
+      "size": 84,
+      "lines": [
+        {
+          "t": "pick one voice"
+        }
+      ]
+    },
+    {
+      "type": "label",
+      "at": 13.713333333333333,
+      "dur": 2.8,
+      "text": "step 2.",
+      "font": "sans",
+      "size": 36,
+      "y": 12,
+      "x": 50,
+      "color": "accent"
+    },
+    {
+      "type": "hero",
+      "at": 13.863333333333333,
+      "dur": 2.65,
+      "y": 17,
+      "size": 84,
+      "lines": [
+        {
+          "t": "build the"
+        },
+        {
+          "t": "system",
+          "accent": true
+        }
+      ]
+    },
+    {
+      "type": "label",
+      "at": 22.606666666666666,
+      "dur": 2.8,
+      "text": "step 3.",
+      "font": "sans",
+      "size": 36,
+      "y": 12,
+      "x": 50,
+      "color": "accent"
+    },
+    {
+      "type": "hero",
+      "at": 22.756666666666664,
+      "dur": 2.65,
+      "y": 17,
+      "size": 84,
+      "lines": [
+        {
+          "t": "let photos"
+        },
+        {
+          "t": "lead",
+          "accent": true
+        }
+      ]
+    }
+  ]
+}

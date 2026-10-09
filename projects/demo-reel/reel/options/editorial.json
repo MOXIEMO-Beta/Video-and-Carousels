@@ -1,0 +1,49 @@
+{
+  "style": "editorial",
+  "footage": {
+    "src": "assets/footage/sample.mp4",
+    "cuts": [],
+    "zooms": "auto"
+  },
+  "captions": {
+    "src": "assets/footage/sample-words.json",
+    "numbers": true,
+    "auto": true
+  },
+  "timeline": [
+    {
+      "type": "title",
+      "at": 0,
+      "dur": 4.32,
+      "lines": [
+        "Stop posting. Start",
+        "publishing."
+      ],
+      "sub": "Five editorial moves that make a feed"
+    },
+    {
+      "type": "section",
+      "at": 4.82,
+      "dur": 4,
+      "lines": [
+        "1. Pick one voice"
+      ]
+    },
+    {
+      "type": "section",
+      "at": 13.713333333333333,
+      "dur": 4,
+      "lines": [
+        "2. Build the system"
+      ]
+    },
+    {
+      "type": "section",
+      "at": 22.606666666666666,
+      "dur": 4,
+      "lines": [
+        "3. Let photos lead"
+      ]
+    }
+  ]
+}
