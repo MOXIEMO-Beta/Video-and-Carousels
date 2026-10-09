@@ -98,6 +98,8 @@ Exact colours, sizes and spacing were read from the owner's Canva files (`themes
 | `craft` | kraft paper, heavy black caps, pink marker highlight, dashed arrows | `tag`, `title`, `body`, `deco` |
 | `quiet` | off-white page, condensed serif, Share / Save footer | `title`, `body` |
 
+**Video:** `notes` slides animate as a Notes app: each card slides up, the heading highlight wipes in, the body types word by word, then the → arrow taps and fills. Two cards stagger 1.5 s apart. Try `npm run video -- projects/example-notes-video --preview`.
+
 `npm run create` now builds eight options: Cinematic, Luxe, Playful, Neon pop, Founder notes, Craft paper, Quiet minimal and Typographic. Choose a subset with `--styles pop,craft`.
 
 ## Changing the look

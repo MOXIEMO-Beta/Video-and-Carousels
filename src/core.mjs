@@ -110,9 +110,12 @@ export function fontCss() {
 
 /** Reading-time based default scene length (seconds). */
 export function autoDuration(slide) {
-  const text = [slide.title, slide.subtitle, slide.body, slide.quote, ...(slide.items || [])]
+  const cards = slide.cards || [];
+  const text = [slide.title, slide.subtitle, slide.body, slide.quote, slide.lead, ...(slide.items || []),
+    ...cards.flatMap((c) => [c.heading, c.body, ...(c.items || [])])]
     .filter(Boolean)
     .join(' ');
   const words = text.split(/\s+/).filter(Boolean).length;
-  return Math.min(6, Math.max(2.5, 1 + words * 0.24));
+  // cards need time for entrance + typing + arrow tap before the reader finishes
+  return Math.min(10, Math.max(2.5, 1.5 + words * 0.14 + cards.length * 2.2));
 }

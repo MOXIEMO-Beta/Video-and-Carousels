@@ -1,0 +1,14 @@
+{
+  "handle": "@yourhandle",
+  "brand": "Your Studio",
+  "video": { "format": "story" },
+  "slides": [
+    { "layout": "notes", "image": "photos/placeholder-bright.jpg", "kicker": "founder notes", "lead": "Things I've learned the hard way", "title": "starting a\nbusiness", "duration": 3.2 },
+    { "layout": "notes", "image": "photos/placeholder-bright.jpg", "kicker": "founder notes", "date": "September 1st, 2034", "cards": [
+      { "heading": "your vision is your most valuable asset!", "body": "It's your business, your brand. You are the face of it. Your energy is key to making it work." } ] },
+    { "layout": "notes", "image": "photos/placeholder-boucle.jpg", "kicker": "founder notes", "date": "September 1st, 2034", "cards": [
+      { "heading": "some things will not go as planned...", "body": "...and that's totally okay! At least you have a plan b if it doesn't work out." },
+      { "heading": "business checklist:", "items": ["Do something you love every day", "Find the right people for your vision"] } ] },
+    { "layout": "notes", "image": "photos/placeholder-bright.jpg", "kicker": "founder notes", "lead": "Send this to someone who needs to hear it", "title": "save &\nshare", "duration": 3 }
+  ]
+}

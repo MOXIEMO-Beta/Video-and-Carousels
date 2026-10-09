@@ -87,16 +87,35 @@ function notesCss(ctx, slide) {
 .card p{margin-top:22px;font-size:30px;line-height:1.5;letter-spacing:-.01em}
 .card ul{margin:22px 0 0 28px;font-size:30px;line-height:1.55}
 .foot{display:flex;justify-content:space-between;color:${n.pale};font-weight:700;font-size:22px;letter-spacing:-.02em}
-${grain(0.05, 'screen')}`;
+${grain(0.05, 'screen')}
+${ctx.mode === 'video' ? notesVideoCss(n) : ''}`;
+}
+
+/** Card choreography: slide up -> highlight wipes in -> body types word by word -> arrow taps and fills. */
+function notesVideoCss(n) {
+  return `
+.card.r{opacity:0;animation:cardIn .85s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.25s + var(--ci,0) * 1.5s)}
+@keyframes cardIn{from{opacity:0;transform:translateY(190px) scale(.95)}to{opacity:1;transform:none}}
+.card h3{background-image:linear-gradient(${n.pale},${n.pale});background-color:transparent;background-repeat:no-repeat;background-size:0% 100%;animation:wipe .6s cubic-bezier(.6,0,.2,1) both;animation-delay:calc(.85s + var(--ci,0) * 1.5s)}
+@keyframes wipe{to{background-size:100% 100%}}
+.card .hd,.card .dt{opacity:0;animation:fadeUp .5s ease both;animation-delay:calc(.55s + var(--ci,0) * 1.5s)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.card p .w{animation-delay:calc(1.35s + var(--ci,0) * 1.5s + var(--wi,0) * .05s);animation-duration:.35s}
+.card li{opacity:0;animation:fadeUp .45s ease both;animation-delay:calc(1.4s + var(--ci,0) * 1.5s + var(--li,0) * .35s)}
+.card .ar i:last-child{animation:tap .55s ease both;animation-delay:calc(2.3s + var(--ci,0) * 1.5s)}
+@keyframes tap{0%{transform:scale(1)}40%{transform:scale(.8)}100%{transform:scale(1);background:${n.arrowOn};color:#fff}}
+.foot{opacity:0;animation:fadeUp .6s ease both;animation-delay:.4s}
+.kick{opacity:0;animation:fadeUp .6s ease both;animation-delay:.1s}`;
 }
 function notesBody(slide, ctx, r, words) {
   const date = slide.date || '';
-  const cards = (slide.cards || []).map((c, i) => `<div ${r('card')}><div class="hd"><b>Notes</b><span class="ar"><i class="off">←</i><i>→</i></span></div>${
+  const cards = (slide.cards || []).map((c, i) => `<div ${r('card')} data-ci="${i}"><div class="hd"><b>Notes</b><span class="ar"><i class="off">←</i><i>→</i></span></div>${
     date ? `<div class="dt">${esc(date)}</div>` : '<div style="height:20px"></div>'}<h3>${md(c.heading)}</h3>${
-    c.items ? `<ul>${c.items.map((x) => `<li>${md(x)}</li>`).join('')}</ul>` : `<p>${md(c.body || '')}</p>`}</div>`).join('');
+    c.items ? `<ul>${c.items.map((x, j) => `<li style="--li:${j}">${md(x)}</li>`).join('')}</ul>` : `<p${ctx.mode === 'video' ? ' data-words' : ''}>${md(c.body || '')}</p>`}</div>`).join('');
   const foot = `<div class="foot"><span>${String(ctx.index + 1).padStart(2, '0')}/${String(ctx.total).padStart(2, '0')}</span><span>${esc(ctx.spec.handle || '')}</span></div>`;
   if (slide.cards?.length) {
-    return `<div class="slide"><div class="kick">${esc(slide.kicker || '')}</div><div class="cards main">${cards}</div>${foot}</div>`;
+    const withCi = cards.replace(/<div class="card r" style="([^"]*)" data-ci="(\d+)">/g, (_, st, i) => `<div class="card r" style="${st};--ci:${i}">`);
+    return `<div class="slide"><div class="kick">${esc(slide.kicker || '')}</div><div class="cards main">${withCi}</div>${foot}</div>`;
   }
   return `<div class="slide"><div class="kick">${esc(slide.kicker || '')}</div><div class="main cover">${
     slide.lead ? `<div ${r('lead')}>${md(slide.lead)}</div>` : ''}<h1 ${r('t')} data-fit="${ctx.h > 1500 ? 240 : 205}"${words}>${lower(slide.title)}</h1></div>${foot}</div>`;
