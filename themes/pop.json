@@ -1,0 +1,9 @@
+{
+  "name": "pop",
+  "note": "Values read from the owner's Canva designs (1080px-wide canvases). Fonts are open-source stand-ins; Canva returned font IDs, not names.",
+  "fonts": { "head": "Inter Tight", "script": "Yellowtail", "body": "Inter", "craft": "Anton" },
+  "pop": { "yellow": "#fff852", "panel": "#2f4436", "panelOpacity": 0.3, "white": "#ffffff" },
+  "notes": { "pale": "#f6f4b5", "heading": "#f6d96c", "arrowOn": "#dabd48", "arrowOff": "#cfd0d4", "date": "#b4b4b4", "text": "#404040", "card": "#ffffff" },
+  "craft": { "bg": "#f2ede0", "ink": "#050505", "pink": "#ff66c4", "label": "#161616" },
+  "quiet": { "bg": "#ebe9e5", "ink": "#1d1c1a", "muted": "#3b3a37" }
+}

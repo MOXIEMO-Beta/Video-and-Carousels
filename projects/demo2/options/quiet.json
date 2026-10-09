@@ -1,0 +1,32 @@
+{
+  "handle": "@yourhandle",
+  "brand": "Your Studio",
+  "format": "carousel",
+  "slides": [
+    {
+      "layout": "quiet",
+      "title": "Stop posting. Start *publishing.*",
+      "body": "Five editorial moves that make a feed feel like a magazine."
+    },
+    {
+      "layout": "quiet",
+      "title": "Pick one voice",
+      "body": "Trends rotate. A point of view compounds. Choose the tone you can hold for a year."
+    },
+    {
+      "layout": "quiet",
+      "title": "Build the system",
+      "body": "One serif, one sans, one accent colour. Repeat until it is recognisable."
+    },
+    {
+      "layout": "quiet",
+      "title": "Let photos lead",
+      "body": "Real light and real texture do more than any template."
+    },
+    {
+      "layout": "quiet",
+      "title": "Make it *yours.*",
+      "body": "Save this for your next content sprint."
+    }
+  ]
+}

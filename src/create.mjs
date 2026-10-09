@@ -30,6 +30,10 @@ const STYLES = {
   cinematic: { label: 'Cinematic', blurb: 'Moody full-bleed photos, translucent text bars, numbered rows.' },
   luxe: { label: 'Luxe headline', blurb: 'Tight serif, roman + italic, highlight box, script aside.' },
   playful: { label: 'Playful note', blurb: 'Heavy blush caps, handwriting, taped note cards.' },
+  pop: { label: 'Neon pop', blurb: 'Tight lowercase neon yellow with a script accent over a tinted photo.' },
+  notes: { label: 'Founder notes', blurb: 'Pale-yellow headline, then white Notes-app cards over a photo.' },
+  craft: { label: 'Craft paper', blurb: 'Kraft texture, heavy black caps, pink marker highlight, dashed arrows.' },
+  quiet: { label: 'Quiet minimal', blurb: 'Off-white page, condensed serif, plain sans. Share / Save footer.' },
   type: { label: 'Typographic', blurb: 'No photos needed: colour slides with editorial type.' },
 };
 
@@ -104,9 +108,10 @@ if (!imageFiles.length && flag('--placeholders')) {
   imageFiles = fs.readdirSync(ph).filter((f) => /\.jpg$/i.test(f)).sort().map((f) => path.join(ph, f));
 }
 let styles = (opt('--styles') || Object.keys(STYLES).join(',')).split(',');
+const PHOTO_STYLES = ['cinematic', 'luxe', 'playful', 'pop', 'notes'];
 if (!imageFiles.length) {
-  warnings.push(`No photos in ${path.relative(ROOT, imagesDir) || '.'}/ — only the Typographic option was built. Add images (or pass --placeholders) for the photo styles.`);
-  styles = styles.filter((s) => s === 'type');
+  warnings.push(`No photos in ${path.relative(ROOT, imagesDir) || '.'}/ — only the no-photo options (Craft paper, Quiet minimal, Typographic) were built. Add images (or pass --placeholders) for the photo styles.`);
+  styles = styles.filter((s) => !PHOTO_STYLES.includes(s));
 }
 if (seed != null) {
   const rnd = mulberry(seed);
@@ -158,6 +163,35 @@ const builders = {
     const slides = [note({ layout: 'note', script: content.topic, title: heavy(content.hook), card: content.intro, tag: 'read this' }, 0)];
     points.forEach((p, i) => slides.push(note({ layout: 'note', script: `Tip ${i + 1}`, title: heavy(p.title), card: p.text, arrow: i < points.length - 1 }, slides.length)));
     slides.push(note({ layout: 'note', script: 'Your turn', title: heavy(ctaTitle), card: cta.body, arrow: false }, slides.length));
+    return slides;
+  },
+  pop() {
+    const lines = (t) => breakLines(t, 8);
+    const bw = (s, i) => withImg({ ...s, kicker: content.topic, look: 'bw' }, i);
+    const slides = [withImg({ layout: 'pop', kicker: content.topic, title: lines(content.hook), body: content.intro, shade: 0.2 }, 0)];
+    points.forEach((p, i) => slides.push(withImg({ layout: 'pop', kicker: content.topic, title: lines(p.title), body: p.text, shade: 0.3 }, slides.length)));
+    slides.push(withImg({ layout: 'pop', kicker: content.topic, title: lines(ctaTitle), body: cta.body, shade: 0.3 }, slides.length));
+    slides.forEach((s) => { const im = info.find((x) => x.rel === s.image); if (im && im.avg > 0.6) s.shade = 0.5; delete s.ink; });
+    return slides;
+  },
+  notes() {
+    const slides = [withImg({ layout: 'notes', kicker: content.topic, lead: content.intro, title: breakLines(content.hook, 10) }, 0)];
+    points.forEach((p) => slides.push(withImg({ layout: 'notes', kicker: content.topic, date: content.date, cards: [{ heading: plainText(p.title), body: p.text }] }, slides.length)));
+    slides.push(withImg({ layout: 'notes', kicker: content.topic, lead: cta.body, title: breakLines(ctaTitle, 10) }, slides.length));
+    slides.forEach((s) => { delete s.ink; const im = info.find((x) => x.rel === s.image); if (im && im.avg > 0.6) s.shade = 0.35; });
+    return slides;
+  },
+  craft() {
+    const tag = '#' + String(content.topic || 'tips').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const slides = [{ layout: 'craft', tag, title: plainText(content.hook), body: content.intro }];
+    points.forEach((p) => slides.push({ layout: 'craft', tag, title: plainText(p.title), body: p.text }));
+    slides.push({ layout: 'craft', tag, title: plainText(ctaTitle), body: cta.body });
+    return slides;
+  },
+  quiet() {
+    const slides = [{ layout: 'quiet', title: content.hook, body: content.intro }];
+    points.forEach((p) => slides.push({ layout: 'quiet', title: p.title, body: p.text }));
+    slides.push({ layout: 'quiet', title: ctaTitle, body: cta.body });
     return slides;
   },
   type() {

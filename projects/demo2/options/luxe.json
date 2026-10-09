@@ -1,0 +1,53 @@
+{
+  "handle": "@yourhandle",
+  "brand": "Your Studio",
+  "format": "carousel",
+  "slides": [
+    {
+      "layout": "headline",
+      "kicker": "Brand Notes",
+      "title": "Stop posting.\nStart\n*publishing.*",
+      "body": "Five editorial moves that make a feed feel like a magazine.",
+      "tag": "Create a life you love",
+      "image": "assets/photos/placeholder-boucle.jpg",
+      "ink": "dark"
+    },
+    {
+      "layout": "headline",
+      "kicker": "Point 01",
+      "title": "Pick one\nvoice",
+      "body": "Trends rotate. A point of view compounds. Choose the tone you can hold for a year.",
+      "tag": "Create a life you love",
+      "image": "assets/photos/placeholder-bright.jpg",
+      "ink": "dark"
+    },
+    {
+      "layout": "headline",
+      "kicker": "Point 02",
+      "title": "Build the\nsystem",
+      "body": "One serif, one sans, one accent colour. Repeat until it is recognisable.",
+      "tag": "Create a life you love",
+      "image": "assets/photos/placeholder-casual.jpg",
+      "ink": "light"
+    },
+    {
+      "layout": "headline",
+      "kicker": "Point 03",
+      "title": "Let photos\nlead",
+      "body": "Real light and real texture do more than any template.",
+      "tag": "Create a life you love",
+      "image": "assets/photos/placeholder-moody.jpg",
+      "ink": "light"
+    },
+    {
+      "layout": "headline",
+      "kicker": "Next",
+      "title": "Make it\n==yours==.",
+      "body": "Save this for your next content sprint.",
+      "aside": "See you\ninside",
+      "tag": "Create a life you love",
+      "image": "assets/photos/placeholder-sunlit.jpg",
+      "ink": "light"
+    }
+  ]
+}

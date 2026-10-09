@@ -1,5 +1,6 @@
 import { fontCss, md, resolveAsset } from './core.mjs';
 import { PHOTO_LAYOUTS, renderPhotoHtml } from './photo.mjs';
+import { POP_LAYOUTS, renderPopHtml } from './pop.mjs';
 
 const LAYOUTS = ['cover', 'statement', 'list', 'quote', 'stat', 'image', 'cta'];
 
@@ -109,6 +110,7 @@ document.fonts.ready.then(()=>{fit();if(document.body.dataset.mode==='video')spl
 
 export function renderSlideHtml(slide, ctx) {
   if (PHOTO_LAYOUTS.includes(slide.layout)) return renderPhotoHtml(slide, ctx);
+  if (POP_LAYOUTS.includes(slide.layout)) return renderPopHtml(slide, ctx);
   const { w, h, theme, spec, base, index, total, mode = 'still', duration = 5 } = ctx;
   const layout = slide.layout || (index === 0 ? 'cover' : index === total - 1 ? 'cta' : 'statement');
   if (!LAYOUTS.includes(layout)) throw new Error(`Unknown layout "${layout}" on slide ${index + 1}`);

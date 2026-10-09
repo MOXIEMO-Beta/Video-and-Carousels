@@ -1,0 +1,41 @@
+{
+  "handle": "@yourhandle",
+  "brand": "Your Studio",
+  "format": "carousel",
+  "slides": [
+    {
+      "layout": "cover",
+      "kicker": "Brand Notes",
+      "title": "Stop posting. Start *publishing.*",
+      "subtitle": "Five editorial moves that make a feed feel like a magazine."
+    },
+    {
+      "layout": "statement",
+      "tone": "paper",
+      "kicker": "Point 01",
+      "title": "Pick one voice",
+      "body": "Trends rotate. A point of view compounds. Choose the tone you can hold for a year."
+    },
+    {
+      "layout": "statement",
+      "tone": "ink",
+      "kicker": "Point 02",
+      "title": "Build the system",
+      "body": "One serif, one sans, one accent colour. Repeat until it is recognisable."
+    },
+    {
+      "layout": "statement",
+      "tone": "sage",
+      "kicker": "Point 03",
+      "title": "Let photos lead",
+      "body": "Real light and real texture do more than any template."
+    },
+    {
+      "layout": "cta",
+      "tone": "clay",
+      "title": "Make it *yours.*",
+      "body": "Save this for your next content sprint.",
+      "button": "Save"
+    }
+  ]
+}

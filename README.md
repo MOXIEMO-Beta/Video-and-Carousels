@@ -87,6 +87,19 @@ Built from reference carousels: full-bleed photography with type laid over it. E
 
 `spec.brand` sets the bottom label. Run `node src/make-placeholders.mjs` to regenerate the stand-in backgrounds; replace them with your own photos.
 
+## Styles from your Canva designs
+
+Exact colours, sizes and spacing were read from the owner's Canva files (`themes/pop.json`). Fonts are open-source stand-ins, because Canva returns font IDs rather than names.
+
+| layout | look | fields |
+|---|---|---|
+| `pop` | neon-yellow tight lowercase, script `*accent*`, tinted photo, four-dot pager | `image`, `kicker`, `title`, `body`, `look` (`bw`), `shade`, `panel`, `dots` |
+| `notes` | pale-yellow headline cover, then white Notes-app cards | `image`, `kicker`, `lead`, `title`, `cards[]` (`heading`, `body` or `items`), `date` |
+| `craft` | kraft paper, heavy black caps, pink marker highlight, dashed arrows | `tag`, `title`, `body`, `deco` |
+| `quiet` | off-white page, condensed serif, Share / Save footer | `title`, `body` |
+
+`npm run create` now builds eight options: Cinematic, Luxe, Playful, Neon pop, Founder notes, Craft paper, Quiet minimal and Typographic. Choose a subset with `--styles pop,craft`.
+
 ## Changing the look
 
 Photo layouts take colours and fonts from `themes/photo.json`. Typographic layouts use `themes/editorial.json`. All style lives in those files (palette tones, fonts, grain) and `src/layouts.mjs` (layout CSS). Add a tone and use it by name. Fonts are Playfair Display and Inter, installed through npm.

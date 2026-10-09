@@ -1,0 +1,56 @@
+{
+  "handle": "@yourhandle",
+  "brand": "Your Studio",
+  "format": "carousel",
+  "slides": [
+    {
+      "layout": "notes",
+      "kicker": "Brand Notes",
+      "lead": "Five editorial moves that make a feed feel like a magazine.",
+      "title": "Stop\nposting.\nStart\n*publishing.*",
+      "image": "assets/photos/placeholder-boucle.jpg",
+      "shade": 0.35
+    },
+    {
+      "layout": "notes",
+      "kicker": "Brand Notes",
+      "cards": [
+        {
+          "heading": "Pick one voice",
+          "body": "Trends rotate. A point of view compounds. Choose the tone you can hold for a year."
+        }
+      ],
+      "image": "assets/photos/placeholder-bright.jpg",
+      "shade": 0.35
+    },
+    {
+      "layout": "notes",
+      "kicker": "Brand Notes",
+      "cards": [
+        {
+          "heading": "Build the system",
+          "body": "One serif, one sans, one accent colour. Repeat until it is recognisable."
+        }
+      ],
+      "image": "assets/photos/placeholder-casual.jpg"
+    },
+    {
+      "layout": "notes",
+      "kicker": "Brand Notes",
+      "cards": [
+        {
+          "heading": "Let photos lead",
+          "body": "Real light and real texture do more than any template."
+        }
+      ],
+      "image": "assets/photos/placeholder-moody.jpg"
+    },
+    {
+      "layout": "notes",
+      "kicker": "Brand Notes",
+      "lead": "Save this for your next content sprint.",
+      "title": "Make it\n*yours.*",
+      "image": "assets/photos/placeholder-sunlit.jpg"
+    }
+  ]
+}
