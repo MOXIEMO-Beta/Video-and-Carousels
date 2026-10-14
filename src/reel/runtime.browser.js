@@ -193,6 +193,9 @@
     return `<div class="it" style="left:${num(it.x, 50) - w / 2}%;top:${num(it.y, 50) - h / 2}%;width:${w}%;height:${h}%;">${svg}</div>`;
   };
 
+  // invisible: tells the caption engine that a light full-frame still is on screen
+  T.brollmarker = () => '';
+
   T.sticker = (it, lt) => block(it, rot(it, `<div style="font-size:${P(it.size || 70)};line-height:1;${ent(lt, 'pop', 0.18)}">${esc(it.emoji || '✨')}</div>`));
 
   T.image = (it, lt) =>
@@ -340,6 +343,8 @@
       const busy = act.some((it) => { const e = extent(it); return e && e[1] >= lo && e[0] <= hi; });
       if (busy) place = { x: num(cap.busy.x, cap.x), y: num(cap.busy.y, cap.y), w: num(cap.busy.w, cap.w), boxed: cap.busy.boxed ?? place.boxed };
     }
+    const onLight = act.some((it) => (it.type === 'card' && it.style !== 'dark' && covers(it, place.x, place.y)) || (it.type === 'brollmarker' && it.light));
+    const chipy = place.boxed || onLight; // light backgrounds need dark emphasis colours
     let html = '';
     if (cap.mode === 'word') {
       let i = words.findIndex((w) => t >= w.t0 && t < w.t1);
@@ -348,18 +353,17 @@
         const nxt = words.find((w) => w.t0 > t);
         if (prev && nxt && nxt.t0 - prev.t1 < 0.25 && t - prev.t1 < 0.25) i = words.indexOf(prev);
       }
-      if (i >= 0) html = wordHtml(words[i], cap, place.boxed);
+      if (i >= 0) html = wordHtml(words[i], cap, chipy);
     } else {
       const groups = C._groups || (C._groups = groupWords(words, cap.max || (cap.mode === 'phrase' ? 4 : 5), cap.gap ?? 0.55));
       // later groups win over the previous group's short hold, so changes are never late
       const g = [...groups].reverse().find((gr) => t >= gr.t0 && t < gr.t1 + 0.12);
       if (g) {
         const vis = cap.mode === 'stack' ? g.filter((w) => w.t0 <= t) : g;
-        html = vis.map((w) => wordHtml(w, cap, place.boxed)).join(' ');
+        html = vis.map((w) => wordHtml(w, cap, chipy)).join(' ');
       }
     }
     if (!html) return '';
-    const onLight = act.some((it) => it.type === 'card' && it.style !== 'dark' && covers(it, place.x, place.y));
     const colr = onLight ? '#111' : col(cap.color || 'text');
     const sh = onLight || place.boxed ? 'none' : `0 2px ${P(10)} rgba(0,0,0,${num(cap.shadow, 0.45)}),0 0 ${P(2)} rgba(0,0,0,.25)`;
     const chip = place.boxed ? `background:rgba(255,255,255,.94);color:#111;padding:${P(6)} ${P(14)};border-radius:${P(6)};display:inline-block;` : '';

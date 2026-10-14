@@ -11,6 +11,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { chromium } from 'playwright';
 import { ROOT, fontCss, resolveAsset, resolveAssetPath } from './core.mjs';
+import { renderMagCard } from './reel/magcard.mjs';
+import { analyzeImage } from './analyze.mjs';
 import { parseCaptions, markEmphasis, smoothWords, buildEdl, zoomExpr, autoZooms } from './reel/timeline.mjs';
 
 const ff = (args, label) => {
@@ -117,6 +119,22 @@ export async function renderReel({ spec, base, tokens, name, outFile, preview = 
     if (o.type === 'clip') clips.push(o);
     else if (o.type === 'broll') brolls.push(o);
     else items.push(o);
+  }
+
+  // typographic B-roll cards (broll items that carry `card` instead of `src`)
+  for (const [i, b] of brolls.entries()) {
+    if (!b.card) continue;
+    const f = path.join(work, `card_${i}.png`);
+    const card = b.card.image ? { ...b.card, image: resolveAsset(base, b.card.image) } : b.card;
+    await renderMagCard(card, f, 1080, 1920);
+    b.src = f;
+  }
+
+  // tell the caption engine which B-roll stills are light, so captions flip to dark ink on them
+  for (const b of brolls) {
+    let light = false;
+    try { light = analyzeImage(resolveAssetPath(base, b.src)).avg > 0.6; } catch { /* unreadable: assume dark */ }
+    items.push({ type: 'brollmarker', at: b.at, dur: b.dur ?? 3, light });
   }
 
   // ---- render overlay states (screenshot only when the DOM changes)

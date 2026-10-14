@@ -5,6 +5,9 @@
   "h": 1920,
   "fps": 30
  },
+ "audio": {
+  "loudnorm": true
+ },
  "footage": {
   "src": "inbox/clip.mp4",
   "trim": [
@@ -184,6 +187,23 @@
    "size": 58
   },
   {
+   "type": "broll",
+   "card": {
+    "style": "masthead",
+    "word": "CHANGING.",
+    "caption": "So much has changed. *So much is changing.*",
+    "kicker": "AI \u00b7 tools \u00b7 tech",
+    "image": "inbox/broll/moodboard.jpg"
+   },
+   "at": 26.26,
+   "dur": 3.3,
+   "zoom": 0.06,
+   "focus": [
+    0.5,
+    0.5
+   ]
+  },
+  {
    "type": "image",
    "src": "inbox/broll/article-evolution-of-ai.png",
    "at": 17.72,
@@ -240,24 +260,24 @@
    "fit": "blur"
   },
   {
-   "type": "tape",
-   "text": "GROWTH",
-   "at": 50.12,
-   "dur": 3.6,
-   "x": 36,
-   "y": 12,
-   "rotate": -3,
-   "size": 58
-  },
-  {
-   "type": "tape",
-   "text": "DISTRIBUTION",
-   "at": 51,
-   "dur": 3.0,
-   "x": 58,
-   "y": 21,
-   "rotate": 2,
-   "size": 58
+   "type": "broll",
+   "card": {
+    "style": "letterpress",
+    "lines": [
+     "GROWTH",
+     "+",
+     "DISTRIBUTION"
+    ],
+    "kicker": "KEY DRIVERS"
+   },
+   "at": 49.97,
+   "dur": 3.9,
+   "zoom": 0.05,
+   "grain": true,
+   "focus": [
+    0.5,
+    0.5
+   ]
   },
   {
    "type": "tape",
@@ -270,14 +290,21 @@
    "size": 58
   },
   {
-   "type": "tape",
-   "text": "GROWTH: HARDER",
-   "at": 65.14,
-   "dur": 2.6,
-   "x": 56,
-   "y": 22,
-   "rotate": 2,
-   "size": 58
+   "type": "broll",
+   "card": {
+    "style": "masthead",
+    "word": "HARDER.",
+    "caption": "Building got easy. *Growth and distribution* got harder.",
+    "kicker": "Houston",
+    "image": "inbox/broll/cafe-laptops.jpg"
+   },
+   "at": 62.940000000000005,
+   "dur": 3.6,
+   "zoom": 0.06,
+   "focus": [
+    0.5,
+    0.5
+   ]
   },
   {
    "type": "tape",
@@ -320,6 +347,18 @@
    "rotate": -2
   },
   {
+   "type": "broll",
+   "src": "inbox/broll/cafe-laptops.jpg",
+   "at": 84.60000000000001,
+   "dur": 3.8,
+   "focus": [
+    0.35,
+    0.55
+   ],
+   "zoom": 0.1,
+   "fit": "cover"
+  },
+  {
    "type": "tape",
    "text": "BUILD INTENTIONALLY",
    "at": 84.9,
@@ -340,6 +379,25 @@
    "size": 58
   },
   {
+   "type": "broll",
+   "card": {
+    "style": "letterpress",
+    "lines": [
+     "BUILD",
+     "+",
+     "GROW"
+    ],
+    "kicker": "THIS IS WHERE WE ARE GOING"
+   },
+   "at": 101.7,
+   "dur": 3.4,
+   "zoom": 0.05,
+   "focus": [
+    0.5,
+    0.5
+   ]
+  },
+  {
    "type": "box",
    "at": 94.72,
    "dur": 5.2,
@@ -352,13 +410,23 @@
   },
   {
    "type": "tape",
-   "text": "HOUSTON",
-   "at": 112.39,
-   "dur": 2.6,
-   "x": 40,
-   "y": 12,
-   "rotate": -3,
-   "size": 58
+   "text": "LOVABLE AMBASSADOR",
+   "at": 110.7,
+   "dur": 3.2,
+   "x": 50,
+   "y": 11,
+   "rotate": -2,
+   "size": 48
+  },
+  {
+   "type": "tape",
+   "text": "HOUSTON CITY LEAD",
+   "at": 111.78,
+   "dur": 2.9,
+   "x": 52,
+   "y": 19,
+   "rotate": 2,
+   "size": 48
   },
   {
    "type": "broll",
@@ -486,8 +554,5 @@
    "y": 22,
    "size": 60
   }
- ],
- "audio": {
-  "loudnorm": true
- }
+ ]
 }
