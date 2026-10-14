@@ -27,7 +27,8 @@
   const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
   const safeFont = (k) => String(k).replace(/[^\w \-]/g, '');
   const safeCol = (k) => (/^[#\w(),.%\s-]+$/.test(String(k)) ? String(k) : '#ffffff');
-  const font = (k) => `font-family:'${safeFont((C.tokens.fonts && C.tokens.fonts[k]) || k)}',sans-serif;`;
+  const BUILTIN_FONTS = { marker: 'Permanent Marker' };
+  const font = (k) => `font-family:'${safeFont((C.tokens.fonts && C.tokens.fonts[k]) || BUILTIN_FONTS[k] || k)}',sans-serif;`;
   const col = (k) => safeCol((C.tokens.colors && C.tokens.colors[k]) || k);
   // token name -> hex -> literal fallback (never an unknown colour name, which is invalid CSS)
   const colOr = (k, fb) => {
@@ -171,6 +172,27 @@
     return block({ ...it, w, align, x: it.x ?? (align === 'left' ? (100 - w) / 2 : 50) }, inner);
   };
 
+  // torn strip of paper tape with marker lettering (as on magazine collages)
+  T.tape = (it, lt) => {
+    const size = num(it.size, 58);
+    const ink = col(it.color || '#111111');
+    const paper = it.paper || 'rgba(236,236,230,.88)';
+    const edge = 'polygon(0.8% 6%,3% 0,98% 3%,100% 18%,98.4% 40%,100% 63%,98.6% 100%,2% 95%,0 72%,1.6% 48%,0 24%)';
+    const inner = `<span style="display:inline-block;background:${paper};color:${ink};${font(it.font || 'marker')}font-size:${P(size)};line-height:1.05;letter-spacing:.02em;padding:${P(size * 0.16)} ${P(size * 0.55)} ${P(size * 0.22)};clip-path:${edge};white-space:nowrap;text-transform:${it.lower ? 'lowercase' : 'uppercase'};">${esc(it.text)}</span>`;
+    const tilt = num(it.rotate, -2);
+    return block({ y: 20, ...it }, `<div style="transform:rotate(${tilt}deg);filter:drop-shadow(0 ${P(5)} ${P(10)} rgba(0,0,0,.28));${ent(lt, 'pop', 0.12)}">${inner}</div>`);
+  };
+
+  // hand-drawn ring that draws itself (x,y = centre in %, w,h in % of the frame)
+  T.oval = (it, lt) => {
+    const w = num(it.w, 50), h = num(it.h, 10);
+    const prog = clamp(lt / num(it.draw, 0.45));
+    const c = col(it.color || '#E8FF1F');
+    const wob = `M 14 52 C 4 22, 70 4, 152 6 S 296 22, 292 52 S 232 96, 150 93 S 8 84, 20 46 C 40 20, 110 12, 160 10`;
+    const svg = `<svg viewBox="0 0 300 100" preserveAspectRatio="none" style="width:100%;height:100%;overflow:visible;transform:rotate(${num(it.rotate, -2)}deg);"><path d="${wob}" pathLength="1" fill="none" stroke="${c}" stroke-width="${num(it.stroke, 5)}" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="${(1 - prog).toFixed(3)}" vector-effect="non-scaling-stroke"/></svg>`;
+    return `<div class="it" style="left:${num(it.x, 50) - w / 2}%;top:${num(it.y, 50) - h / 2}%;width:${w}%;height:${h}%;">${svg}</div>`;
+  };
+
   T.sticker = (it, lt) => block(it, rot(it, `<div style="font-size:${P(it.size || 70)};line-height:1;${ent(lt, 'pop', 0.18)}">${esc(it.emoji || '✨')}</div>`));
 
   T.image = (it, lt) =>
@@ -261,6 +283,7 @@
       case 'cta': return [y, y + pct(num(it.size, 84) + 80)];
       case 'card': case 'box': { const y0 = num(it.y, it.type === 'box' ? 15 : 30); return [y0, y0 + cardH(it)]; }
       case 'checklist': return [y, y + pct([].concat(it.items || []).length * num(it.size, 30) * 1.4)];
+      case 'tape': return [y, y + pct(num(it.size, 58) * 1.6)];
       case 'count': return [num(it.y, 22), num(it.y, 22) + pct(num(it.size, 120) * 1.1)];
       default: return null;
     }
@@ -345,8 +368,8 @@
   }
 
   /* ---------- public ---------- */
-  const REQUIRED = { label: ['text'], cta: ['keyword'], image: ['src'], checklist: ['items'], hero: ['lines'] };
-  const DEFAULT_DUR = { title: 5, section: 3.4, label: 3, card: 4, box: 4, sticker: 2.5, image: 3, hero: 2.6, cta: 4, beat: 1.5, checklist: 5, count: 2 };
+  const REQUIRED = { label: ['text'], tape: ['text'], cta: ['keyword'], image: ['src'], checklist: ['items'], hero: ['lines'] };
+  const DEFAULT_DUR = { oval: 2, tape: 3, title: 5, section: 3.4, label: 3, card: 4, box: 4, sticker: 2.5, image: 3, hero: 2.6, cta: 4, beat: 1.5, checklist: 5, count: 2 };
 
   R.init = (cfg) => {
     C = cfg;

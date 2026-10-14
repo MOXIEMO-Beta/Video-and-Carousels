@@ -11,7 +11,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { chromium } from 'playwright';
 import { ROOT, fontCss, resolveAsset, resolveAssetPath } from './core.mjs';
-import { parseCaptions, markEmphasis, buildEdl, zoomExpr, autoZooms } from './reel/timeline.mjs';
+import { parseCaptions, markEmphasis, smoothWords, buildEdl, zoomExpr, autoZooms } from './reel/timeline.mjs';
 
 const ff = (args, label) => {
   const r = spawnSync('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error', ...args], { encoding: 'utf8' });
@@ -80,6 +80,8 @@ export async function renderReel({ spec, base, tokens, name, outFile, preview = 
   if (src.hasAudio) {
     let af = `[0:a]atrim=start=${A}:end=${B},asetpts=PTS-STARTPTS`;
     if (cutExpr) af += `,aselect='not(${cutExpr})',asetpts=N/SR/TB`;
+    // optional loudness normalisation (social platforms play around -14 LUFS)
+    if (spec.audio?.loudnorm) af += `,loudnorm=I=${spec.audio.loudnorm === true ? -14 : spec.audio.loudnorm}:TP=-1.5:LRA=11`;
     filters.push(af + '[a]');
     mapArgs.push('-map', '[a]');
   }
@@ -91,6 +93,7 @@ export async function renderReel({ spec, base, tokens, name, outFile, preview = 
   let words = [];
   if (spec.captions?.src) {
     words = parseCaptions(resolveAssetPath(base, spec.captions.src));
+    words = smoothWords(words);
     markEmphasis(words, spec.captions);
     const cl = (x) => Math.min(edl.outDur, Math.max(0, x));
     words = words
@@ -105,12 +108,15 @@ export async function renderReel({ spec, base, tokens, name, outFile, preview = 
   const useTokens = { ...tokens, captions: capTokens };
   const items = [];
   const clips = [];
+  const brolls = [];
   for (const it of spec.timeline || []) {
     const at = edl.mapStart(it.at);
     const o = { ...it, at };
     if (typeof o.image === 'string' && o.image) o.image = resolveAsset(base, o.image);
     if (typeof o.src === 'string' && o.type === 'image') o.src = resolveAsset(base, o.src);
-    if (o.type === 'clip') clips.push(o); else items.push(o);
+    if (o.type === 'clip') clips.push(o);
+    else if (o.type === 'broll') brolls.push(o);
+    else items.push(o);
   }
 
   // ---- render overlay states (screenshot only when the DOM changes)
@@ -173,7 +179,25 @@ img{max-width:100%}
     fg.push(`${last}[c${k}]overlay=x=${cx}:y=${cy}:eof_action=pass:enable='between(t,${c.at.toFixed(3)},${(c.at + c.dur).toFixed(3)})'[m${k}]`);
     last = `[m${k}]`;
   });
-  const ovIdx = clips.length + 1;
+  // B-roll stills: full-frame cutaways with a slow push-in, composited under the overlay layer.
+  // Hard cut in and out (like the reference reels), optional film grain for a printed look.
+  brolls.sort((a, b) => a.at - b.at).forEach((b, i) => {
+    const k = clips.length + 1 + i;
+    const D = Math.max(0.2, b.dur ?? 3);
+    inputs.push('-loop', '1', '-framerate', String(FPS), '-t', D.toFixed(3), '-i', resolveAssetPath(base, b.src));
+    const z = b.zoom ?? 0.12;
+    const bx = b.focus?.[0] ?? 0.5, by = b.focus?.[1] ?? 0.45;
+    const zf = `(1+${z}*t/${D.toFixed(3)})`;
+    const grain = b.grain === false ? '' : `,noise=alls=${b.grainAmount ?? 9}:allf=t`;
+    // fit: 'cover' (default) fills the frame and crops; 'blur' keeps the whole picture (titles, covers) over a blurred copy
+    const prep = b.fit === 'blur'
+      ? `[${k}:v]split[bga${k}][fga${k}];[bga${k}]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},gblur=sigma=${Math.round(H / 45)},eq=brightness=-0.12[bgb${k}];[fga${k}]scale=${W}:${H}:force_original_aspect_ratio=decrease,unsharp=5:5:0.5[fgb${k}];[bgb${k}][fgb${k}]overlay=(W-w)/2:(H-h)/2`
+      : `[${k}:v]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},unsharp=5:5:0.5`;
+    fg.push(`${prep},scale=w='trunc(${W}*${zf}/2)*2':h='trunc(${H}*${zf}/2)*2':eval=frame,crop=${W}:${H}:(iw-${W})*${bx}:(ih-${H})*${by}${grain},format=yuv420p,setpts=PTS-STARTPTS+${b.at.toFixed(3)}/TB[b${k}]`);
+    fg.push(`${last}[b${k}]overlay=x=0:y=0:eof_action=pass:enable='between(t,${b.at.toFixed(3)},${(b.at + D).toFixed(3)})'[bm${k}]`);
+    last = `[bm${k}]`;
+  });
+  const ovIdx = clips.length + brolls.length + 1;
   inputs.push('-f', 'concat', '-safe', '0', '-i', path.join(work, 'overlay.txt'));
   fg.push(`[${ovIdx}:v]fps=${FPS},format=rgba[ov]`);
   fg.push(`${last}[ov]overlay=format=auto:shortest=0[out]`);

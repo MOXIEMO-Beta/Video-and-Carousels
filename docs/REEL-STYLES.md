@@ -75,11 +75,22 @@ All times are source time. Cuts and zooms are applied to the footage; every over
 | `beat` | Full-frame colour card showing one word at a time | `words`, `per`, `color`, `emphasis` |
 | `checklist` | Items typed in one after another | `items`, `stagger` |
 | `count` | Number counting up | `from`, `to`, `prefix`, `suffix` |
+| `broll` | Full-frame still cutaway with a slow push-in and film grain (hard cut in and out) | `src`, `at`, `dur`, `fit` (`cover` crops, `blur` keeps the whole picture over a blurred copy: use it for covers and anything with text), `zoom`, `focus`, `grain` |
+| `tape` | Torn paper-tape strip with marker lettering | `text`, `x`, `y`, `rotate`, `size`, `color` |
+| `oval` | Hand-drawn ring that draws itself around something | `x`, `y` (centre), `w`, `h`, `color`, `rotate` |
 | `clip` | Second video (screen recording, b-roll) composited on top | `src`, `x`, `y`, `w`, `start`, `dur` |
 
 ## Style tokens (`styles/reel/<id>.json`)
 
 Besides fonts and colours: `captions` (`mode` word/phrase/stack, `x`/`y`/`w`, `emphasis` and optional `emphasis2` used for about one emphasised word in four, `busy` = an alternative lane or white chip used while a title or card occupies the caption lane, `hideDuring` = item types that already carry the words), `title` / `section` (size, width, entrance, highlight boxes), `sub`, `cta` (keyword font, size, case, colour, plus `lead` and `after` lines), `count`, `card` (default placement for proof cards), `zoom` (`pulse` or `push`) and `zones` (the layout contract).
+
+## Audio and B-roll
+
+`"audio": { "loudnorm": true }` normalises loudness to -14 LUFS (or pass a number). For stills as B-roll, `image` puts a screenshot or photo over the speaker as a card (good for article screenshots), and `broll` takes over the whole frame (good for portraits and covers). Images narrower than the output (1080 px) are upscaled and look soft; use 1080 px+ where you can.
+
+## Transcribing your own footage
+
+`npm run transcribe:setup` fetches a Whisper model into `models/asr/` (git-ignored) and `npm install --no-save @huggingface/transformers` adds the runtime. Then `npm run transcribe -- inbox/clip.mp4` writes `inbox/clip-words.json`; this runs offline on CPU (about 1x real time for the `small` model). Whisper mishears names and jargon, so read the JSON and fix proper nouns before rendering. Word times are smoothed so no caption flashes for less than 0.14 s.
 
 ## Standards check
 

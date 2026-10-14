@@ -41,6 +41,26 @@ export function parseCaptions(file) {
   return words;
 }
 
+/**
+ * Speech-to-text word times are rough: words can have zero length or overlap. Give every word a readable minimum
+ * (default 0.14 s) by borrowing from the previous word, then make sure nothing overlaps. Idempotent.
+ */
+export function smoothWords(words, min = 0.14) {
+  const w = words.slice().sort((a, b) => a.t0 - b.t0).map((x) => ({ ...x }));
+  for (let i = 0; i < w.length; i++) {
+    if (!(w[i].t1 > w[i].t0)) w[i].t1 = w[i].t0;
+    if (w[i].t1 - w[i].t0 < min) {
+      const prev = w[i - 1];
+      const need = min - (w[i].t1 - w[i].t0);
+      // take the time from before the word (the previous word usually ran short or long), else extend after it
+      if (prev && w[i].t0 - need >= prev.t0 + 0.08) { w[i].t0 -= need; prev.t1 = Math.min(prev.t1, w[i].t0); }
+      else w[i].t1 = w[i].t0 + min;
+    }
+  }
+  for (let i = 0; i < w.length - 1; i++) if (w[i].t1 > w[i + 1].t0) w[i].t1 = Math.max(w[i].t0 + 0.05, w[i + 1].t0);
+  return w;
+}
+
 /** Mark emphasis words. opts: { words:[...], numbers:true, every:n (mark every nth long word) }. */
 export function markEmphasis(words, opts = {}) {
   const set = new Set((opts.words || []).map(norm));
