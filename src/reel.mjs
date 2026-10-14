@@ -206,7 +206,7 @@ img{max-width:100%}
     const z = b.zoom ?? 0.12;
     const bx = b.focus?.[0] ?? 0.5, by = b.focus?.[1] ?? 0.45;
     const zf = `(1+${z}*t/${D.toFixed(3)})`;
-    const grain = b.grain === false ? '' : `,noise=alls=${b.grainAmount ?? 9}:allf=t`;
+    const grain = b.grain === false ? '' : `,noise=alls=${b.grainAmount ?? 6}:allf=t`;
     // fit: 'cover' (default) fills the frame and crops; 'blur' keeps the whole picture (titles, covers) over a blurred copy
     const prep = b.fit === 'blur'
       ? `[${k}:v]split[bga${k}][fga${k}];[bga${k}]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},gblur=sigma=${Math.round(H / 45)},eq=brightness=-0.12[bgb${k}];[fga${k}]scale=${W}:${H}:force_original_aspect_ratio=decrease,unsharp=5:5:0.5[fgb${k}];[bgb${k}][fgb${k}]overlay=(W-w)/2:(H-h)/2`
@@ -220,7 +220,7 @@ img{max-width:100%}
   fg.push(`[${ovIdx}:v]fps=${FPS},format=rgba[ov]`);
   fg.push(`${last}[ov]overlay=format=auto:shortest=0[out]`);
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
-  ff([...inputs, '-filter_complex', fg.join(';'), '-map', '[out]', ...(src.hasAudio ? ['-map', '0:a'] : []), '-c:v', 'libx264', '-crf', preview ? '30' : '17', '-preset', preview ? 'veryfast' : 'medium', '-pix_fmt', 'yuv420p', ...(src.hasAudio ? ['-c:a', 'copy'] : []), '-t', edl.outDur.toFixed(3), '-movflags', '+faststart', outFile], 'composite');
+  ff([...inputs, '-filter_complex', fg.join(';'), '-map', '[out]', ...(src.hasAudio ? ['-map', '0:a'] : []), '-c:v', 'libx264', '-crf', preview ? '30' : '20', '-preset', preview ? 'veryfast' : 'medium', ...(preview ? [] : ['-maxrate', '12M', '-bufsize', '24M']), '-pix_fmt', 'yuv420p', ...(src.hasAudio ? ['-c:a', 'copy'] : []), '-t', edl.outDur.toFixed(3), '-movflags', '+faststart', outFile], 'composite');
   log('✓', path.relative(ROOT, outFile), `${edl.outDur.toFixed(1)}s ${W}x${H}@${FPS}`);
   if (!process.env.REEL_KEEP) fs.rmSync(work, { recursive: true, force: true });
   return { outDur: edl.outDur, states: states.length };
